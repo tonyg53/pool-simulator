@@ -66,12 +66,15 @@ def main():
     timeStep = 0.01
     
     while(ballsMoving):
-        ballsMoving = False
         for ball in ballList:
+            countBallsNotMoving = 0
             if ball.xVel > 0 and ball.yVel > 0: 
                 ballsMoving = True
             else: 
-                continue 
+                countBallsNotMoving = countBallsNotMoving + 1
+                
+            if countBallsNotMoving == numBalls: ballsMoving = False
+            
             if ball.xLoc >= table.length or ball.xLoc <= 0 : 
                 ball.xVel = -1 * table.cushionBounce * ball.xVel
             if ball.yLoc >= table.width or ball.yLoc <= 0 : 
