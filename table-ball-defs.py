@@ -74,41 +74,44 @@ def main():
     while ballsMoving :
         for ball in ballList:
             countStoppedBalls = 0
-            if ball.xVel > 0 and ball.yVel > 0: 
+            if ball.xVel != 0 and ball.yVel != 0: 
                 ballsMoving = True
+                
+                #check to see if the ball has hit a wall, if so reverse the velocity dir
+                if ball.xLoc >= table.length or ball.xLoc <= 0 : 
+                    ball.xVel = -1 * table.cushionBounce * ball.xVel
+                if ball.yLoc >= table.width or ball.yLoc <= 0 : 
+                    ball.yVel = -1 * table.cushionBounce * ball.yVel
+                
+                #update the ball velocity from the acceleration
+                ball.xLoc = ball.xLoc + (ball.xVel * timeStep)
+                ball.yLoc = ball.yLoc + (ball.yVel * timeStep)
+                radius = ball.diameter / 2
+                
+                #calculate the acceleration based on the table and ball conditions
+                acc = -(2*9.8*0.001)/(3*radius*radius)
+                if ball.xVel >= 0 : xPositive = True
+                else: xPositive = False
+                alpha = math.atan(ball.yVel/ball.xVel)
+                
+                #this code accounts for ball moving in negitave directions
+                if xPositive:
+                    xAcc = math.cos(alpha) * acc
+                else:
+                    xAcc = -1 * math.cos(alpha) * acc
+                yAcc = math.sin(alpha) * acc
+                
+                ball.xVel = ball.xVel + (xAcc * timeStep)
+                ball.yVel = ball.yVel + (yAcc * timeStep)
+                
+                print("x pos: ",ball.xLoc," y pos: ",ball.yLoc)
+                
             else: 
                 countStoppedBalls = countStoppedBalls + 1
                 
             if countStoppedBalls == numBalls : ballsMoving = False
             
-            #check to see if the ball has hit a wall, if so reverse the velocity dir
-            if ball.xLoc >= table.length or ball.xLoc <= 0 : 
-                ball.xVel = -1 * table.cushionBounce * ball.xVel
-            if ball.yLoc >= table.width or ball.yLoc <= 0 : 
-                ball.yVel = -1 * table.cushionBounce * ball.yVel
             
-            #update the ball velocity from the acceleration
-            ball.xLoc = ball.xLoc + (ball.xVel * timeStep)
-            ball.yLoc = ball.yLoc + (ball.yVel * timeStep)
-            radius = ball.diameter / 2
-            
-            #calculate the acceleration based on the table and ball conditions
-            acc = -(2*9.8*0.001)/(3*radius*radius)
-            if ball.xVel >= 0 : xPositive = True
-            else: xPositive = False
-            alpha = math.atan(ball.yVel/ball.xVel)
-            
-            #this code accounts for ball moving in negitave directions
-            if xPositive:
-                xAcc = math.cos(alpha) * acc
-            else:
-                xAcc = -1 * math.cos(alpha) * acc
-            yAcc = math.sin(alpha) * acc
-            
-            ball.xVel = ball.xVel + (xAcc * timeStep)
-            ball.yVel = ball.yVel + (yAcc * timeStep)
-            
-            print("x pos: ",ball.xLoc," y pos: ",ball.yLoc)
             
 
 if __name__ == "__main__":
