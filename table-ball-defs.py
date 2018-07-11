@@ -16,7 +16,7 @@ class Table(object):
 
 class Ball(object):
     
-    def __init__(self, xVel = 0, yVel=0, diameter = 57.2, mass = 165, elasticity = 0.99, xLoc = 0, yLoc = 0, english = 0, topSpin = 0):
+    def __init__(self, xVel = 0, yVel=0, diameter = 57.2, mass = 0.165, elasticity = 0.99, xLoc = 0, yLoc = 0, english = 0, topSpin = 0):
         self.diameter = diameter
         self.mass = mass
         self.elasticity = elasticity
@@ -29,7 +29,7 @@ class Ball(object):
         
 class Shot(object):
     
-    def __init__(self, cueBall = Ball(), shotAzmuth = 0, cueStickMass = 20, cueStickVelocity = 2, cueStickCOR = 0.85, strikePtDistFromCenter = 0, strikePtAngle = 0):
+    def __init__(self, cueBall, cueStickVelocity = 2, shotAzmuth = 0, cueStickMass = 20, cueStickCOR = 0.85, strikePtDistFromCenter = 0, strikePtAngle = 0):
         self.cueStickMass = cueStickMass * 0.0283495
         self.cueStickVelocity = cueStickVelocity
         self.cueStickCOR = cueStickCOR
@@ -63,18 +63,20 @@ def main():
         
     ballList[0].xLoc = table.length / 4
     ballList[0].yLoc = table.width / 2
-    ballList[1].xLoc = table.length * 3/4
-    ballList[1].xLoc = table.width / 2
+    ballList[1].xLoc = table.length * 3 / 4
+    ballList[1].yLoc = table.width / 2
     
     brake = Shot(ballList[0])
     brake.execute()
     ballsMoving = True
     timeStep = 0.01
     
+    
     while ballsMoving :
         for ball in ballList:
             countStoppedBalls = 0
-            if ball.xVel != 0 and ball.yVel != 0: 
+                        
+            if ball.xVel >= 0.001 or ball.xVel <= -0.001 or ball.yVel >= 0.001 or ball.yVel <= -0.001: 
                 ballsMoving = True
                 
                 #check to see if the ball has hit a wall, if so reverse the velocity dir
@@ -89,7 +91,7 @@ def main():
                 radius = ball.diameter / 2
                 
                 #calculate the acceleration based on the table and ball conditions
-                acc = -(2*9.8*0.001)/(3*radius*radius)
+                acc = -(2*9.8*table.feltFrictionCo)/(3*radius*radius)
                 if ball.xVel >= 0 : xPositive = True
                 else: xPositive = False
                 alpha = math.atan(ball.yVel/ball.xVel)
@@ -104,14 +106,18 @@ def main():
                 ball.xVel = ball.xVel + (xAcc * timeStep)
                 ball.yVel = ball.yVel + (yAcc * timeStep)
                 
-                print("x pos: ",ball.xLoc," y pos: ",ball.yLoc)
+                print("x vel: ",ball.xVel," x acc: ",xAcc)
+                #input()
+                
                 
             else: 
+                ball.xVel = 0
+                ball.yVel = 0
                 countStoppedBalls = countStoppedBalls + 1
                 
             if countStoppedBalls == numBalls : ballsMoving = False
             
-            
+    return      
             
 
 if __name__ == "__main__":
