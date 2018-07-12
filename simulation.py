@@ -26,12 +26,13 @@ def main():
     brake.execute()
     ballsMoving = True
     timeStep = 0.01
+    stopVel = 0.05
     elapsedTime = 0
     
     while ballsMoving :
         countStoppedBalls = 0
         for ball in ballList: 
-            if ball.xVel <= 0.005 and ball.xVel >= -0.005 and ball.yVel <= 0.005 and ball.yVel >= -0.005: 
+            if ball.xVel <= stopVel and ball.xVel >= -stopVel and ball.yVel <= stopVel and ball.yVel >= -stopVel: 
                 ball.xVel = 0
                 ball.yVel = 0
                 countStoppedBalls = countStoppedBalls + 1
@@ -67,8 +68,8 @@ def main():
                 
                 print("time :", elapsedTime, "x loc", ball.xLoc, "y loc: ",ball.yLoc, " x vel: ",ball.xVel," x acc: ",xAcc)
                 #input()
-        for ball1, ball2 in itertools.combinations(ballList, 2):
-             collide.run(ball1, ball2)
+#        for ball1, ball2 in itertools.combinations(ballList, 2):
+#             collide.run(ball1, ball2)
                 
         if countStoppedBalls == numBalls : ballsMoving = False
         elapsedTime = elapsedTime + timeStep

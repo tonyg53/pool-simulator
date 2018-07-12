@@ -8,7 +8,7 @@ import math
 
 class Table(object):
     
-    def __init__(self, length = 9, feltThickness = 0.005, feltFrictionCo = 0.1, cushionBounce = 0.65):
+    def __init__(self, length = 9, feltThickness = 0.000005, feltFrictionCo = 0.1, cushionBounce = 0.65):
         self.length = length * 0.3048
         self.width = (length / 2) * 0.3048
         self.feltThickness = feltThickness
@@ -17,7 +17,7 @@ class Table(object):
 
 class Ball(object):
     
-    def __init__(self, xVel = 0, yVel=0, diameter = 57.2, mass = 0.165, elasticity = 0.99, xLoc = 0, yLoc = 0, english = 0, topSpin = 0):
+    def __init__(self, xVel = 0, yVel=0, diameter = 0.0572, mass = 0.165, elasticity = 0.99, xLoc = 0, yLoc = 0, english = 0, topSpin = 0):
         self.diameter = diameter
         self.mass = mass
         self.elasticity = elasticity
