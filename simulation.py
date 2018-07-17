@@ -20,10 +20,7 @@ def main():
     ballList[0].Loc.x = table.length / 4
     ballList[0].Loc.y = table.width / 2
     ballList[1].Loc.x = table.length * 3 / 4
-    ballList[1].Loc.y = table.width / 2
-    
-    for i, ball in enumerate(ballList):
-        print("ball",i, ball.Vel.x, ball.Vel.y, ball.diameter, ball.mass, ball.elasticity, ball.Loc.x, ball.Loc.y, ball.english, ball.topSpin)
+    ballList[1].Loc.y = table.width / 2 + 0.01
     
     brake = tableballdefs.Shot(ballList[0], 2.5)
     brake.execute()
@@ -70,7 +67,7 @@ def main():
                 ball.Vel.x = ball.Vel.x + (xAcc * timeStep)
                 ball.Vel.y = ball.Vel.y + (yAcc * timeStep)
                 
-                print("time:", round(elapsedTime,2), " ball:",k,"  x loc:", round(ball.Loc.x,2), "  y loc:",round(ball.Loc.y,2), "  x vel:",round(ball.Vel.x,2),"  x acc:",round(xAcc,2))
+            print("time:", round(elapsedTime,2), " ball:",k,"  x loc:", round(ball.Loc.x,2), "  y loc:",round(ball.Loc.y,2), "  x vel:",round(ball.Vel.x,2),"  x acc:",round(xAcc,2))
              
         for ball1, ball2 in itertools.combinations(ballList, 2):
              if collision.happened(ball1, ball2) : collision.run(ball1, ball2)
