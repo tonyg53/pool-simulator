@@ -18,7 +18,9 @@ class Vector(object):
 class Table(object):
     
     def __init__(self, length = 9, feltThickness = 0.00005, feltFrictionCo = 0.1, cushionBounce = 0.9):
+        #convert feet to meters
         self.length = length * 0.3048
+        #standard table width is half the length then convert to meters
         self.width = (length / 2) * 0.3048
         self.feltThickness = feltThickness
         self.feltFrictionCo = feltFrictionCo
@@ -41,6 +43,7 @@ class Ball(object):
 class Shot(object):
     
     def __init__(self, cueBall, cueStickVelocity = 2, shotAzmuth = 0, cueStickMass = 20, cueStickCOR = 0.98, strikePtDistFromCenter = 0, strikePtAngle = 0):
+        #convert oz to kg
         self.cueStickMass = cueStickMass * 0.0283495
         self.cueStickVelocity = cueStickVelocity
         self.cueStickCOR = cueStickCOR
@@ -50,7 +53,7 @@ class Shot(object):
         self.cueBall = cueBall
         
     def execute(self):
-        if self.cueBall.Vel.length != 0 : raise "wait for balls to stop"
+        if self.cueBall.Vel.getLength() != 0 : raise "wait for balls to stop"
 
         stickForce = self.cueStickMass * self.cueStickVelocity
         ballVel = stickForce/(self.cueBall.mass + self.cueStickMass)

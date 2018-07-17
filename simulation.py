@@ -25,21 +25,18 @@ def main():
     for i, ball in enumerate(ballList):
         print("ball",i, ball.Vel.x, ball.Vel.y, ball.diameter, ball.mass, ball.elasticity, ball.Loc.x, ball.Loc.y, ball.english, ball.topSpin)
     
-    brake = tableballdefs.Shot(ballList[0])
+    brake = tableballdefs.Shot(ballList[0], 2.5)
     brake.execute()
     ballsMoving = True
     timeStep = 0.01
     stopVel = 0.05
     elapsedTime = 0
     
-    for i, ball in enumerate(ballList):
-        print("ball",i, ball.Vel.x, ball.Vel.y, ball.diameter, ball.mass, ball.elasticity, ball.Loc.x, ball.Loc.y, ball.english, ball.topSpin)
-    
     while ballsMoving :
         countStoppedBalls = 0
-        for ball in ballList: 
+        for k, ball in enumerate(ballList): 
             
-            if ball.Vel.x <= stopVel and ball.Vel.x >= -stopVel: 
+            if ball.Vel.getLength() <= stopVel: 
                 ball.zeroVel()
                 countStoppedBalls = countStoppedBalls + 1
                 
@@ -73,11 +70,11 @@ def main():
                 ball.Vel.x = ball.Vel.x + (xAcc * timeStep)
                 ball.Vel.y = ball.Vel.y + (yAcc * timeStep)
                 
-                print("time:", round(elapsedTime,2), "  x loc:", round(ball.Loc.x,2), "  y loc:",round(ball.Loc.y,2), "  x vel:",round(ball.Vel.x,2),"  x acc:",round(xAcc,2))
-                #input()
+                print("time:", round(elapsedTime,2), " ball:",k,"  x loc:", round(ball.Loc.x,2), "  y loc:",round(ball.Loc.y,2), "  x vel:",round(ball.Vel.x,2),"  x acc:",round(xAcc,2))
+             
         for ball1, ball2 in itertools.combinations(ballList, 2):
              if collision.happened(ball1, ball2) : collision.run(ball1, ball2)
-                
+             
         if countStoppedBalls == numBalls : ballsMoving = False
         elapsedTime = elapsedTime + timeStep
             
