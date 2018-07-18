@@ -59,8 +59,8 @@ def run(ball1, ball2):
     ball2.Vel.y = sinAngle * finalXSpeed2 + cosAngle * finalYSpeed2
         
 if __name__ == "__main__":
-    ball1 = tableballdefs.Ball(0,    0,0.0572,0.165,0.99,0.68,  0.68,0,0)
-    ball2 = tableballdefs.Ball(-1.50,0,0.0572,0.165,0.99,0.7372,0.68,0,0)
+    ball1 = tableballdefs.Ball(0,    0,0.68,  0.68,0,0)
+    ball2 = tableballdefs.Ball(-1.50,0,0.7372,0.68,0,0)
     if happened(ball1, ball2):
         run(ball1, ball2)
     else: print("no collision")

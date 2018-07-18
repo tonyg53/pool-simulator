@@ -28,10 +28,10 @@ class Table(object):
 
 class Ball(object):
     
-    def __init__(self, xVel = 0, yVel = 0, diameter = 0.0572, mass = 0.165, elasticity = 0.99, xLoc = 0, yLoc = 0, english = 0, topSpin = 0):
-        self.diameter = diameter
-        self.mass = mass
-        self.elasticity = elasticity
+    def __init__(self, xVel = 0, yVel = 0, xLoc = 0, yLoc = 0, english = 0, topSpin = 0):
+        self.diameter = 0.0572
+        self.mass = 0.165
+        self.elasticity = 0.99
         self.Vel = Vector(xVel,yVel)
         self.Loc = Vector(xLoc,yLoc)
         self.english = english
@@ -57,8 +57,8 @@ class Shot(object):
 
         stickForce = self.cueStickMass * self.cueStickVelocity
         ballVel = stickForce/(self.cueBall.mass + self.cueStickMass)
-        self.cueBall.Vel.x = math.cos(math.radians(self.shotAzmuth))*ballVel
-        self.cueBall.Vel.y = math.sin(math.radians(self.shotAzmuth))*ballVel
+        self.cueBall.Vel.x = math.cos(self.shotAzmuth)*ballVel
+        self.cueBall.Vel.y = math.sin(self.shotAzmuth)*ballVel
         return self.cueBall
 
 
