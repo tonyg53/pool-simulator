@@ -57,6 +57,7 @@ class Shot(object):
 
         #assume stick is accelerated for 0.5 sec
         stickForce = self.cueStickMass * self.cueStickVelocity / 0.5
+        #assume stick force is applied to the ball for 0.1 sec
         ballVel = stickForce * 0.1 / (self.cueBall.mass)
         self.cueBall.Vel.x = math.cos(self.shotAzmuth)*ballVel
         self.cueBall.Vel.y = math.sin(self.shotAzmuth)*ballVel
