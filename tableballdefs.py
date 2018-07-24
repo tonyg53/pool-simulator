@@ -42,7 +42,7 @@ class Ball(object):
         
 class Shot(object):
     
-    def __init__(self, cueBall, cueStickVelocity = 2.75, shotAzmuth = 0, cueStickMass = 20, cueStickCOR = 0.98, strikePtDistFromCenter = 0, strikePtAngle = 0):
+    def __init__(self, cueBall, cueStickVelocity = 2, shotAzmuth = 0, cueStickMass = 20, cueStickCOR = 0.98, strikePtDistFromCenter = 0, strikePtAngle = 0):
         #convert oz to kg
         self.cueStickMass = cueStickMass * 0.0283495
         self.cueStickVelocity = cueStickVelocity

@@ -35,7 +35,7 @@ def main():
     
     brakeAzmuth = math.atan2(ballList[1].Loc.y - ballList[0].Loc.y, ballList[1].Loc.x - ballList[0].Loc.x)
     
-    brake = tableballdefs.Shot(ballList[0], 2.5, brakeAzmuth)
+    brake = tableballdefs.Shot(ballList[0], 2.75, brakeAzmuth)
     brake.execute()
     ballsMoving = True
     timeStep = 0.01
