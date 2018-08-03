@@ -29,26 +29,27 @@ class Table(object):
 class Ball(object):
     
     def __init__(self, xVel = 0, yVel = 0, xLoc = 0, yLoc = 0, english = 0, topSpin = 0):
-        self.diameter = 0.0572
+        self.radius = 0.0286
         self.mass = 0.165
         self.elasticity = 0.99
         self.Vel = Vector(xVel,yVel)
         self.Loc = Vector(xLoc,yLoc)
         self.english = english
         self.topSpin = topSpin
+        self.momentOfInertia = (2/5)*self.mass*self.radius*self.radius
         
     def zeroVel(self):
         self.Vel = Vector(0,0)
         
 class Shot(object):
     
-    def __init__(self, cueBall, cueStickVelocity = 2, shotAzmuth = 0, cueStickMass = 20, cueStickCOR = 0.98, strikePtDistFromCenter = 0, strikePtAngle = 0):
+    def __init__(self, cueBall, cueStickVelocity = 2, shotAzmuth = 0, cueStickMass = 20, cueStickCOR = 0.98, strikePtX = 0, strikePtY = 0):
         #convert oz to kg
         self.cueStickMass = cueStickMass * 0.0283495
         self.cueStickVelocity = cueStickVelocity
         self.cueStickCOR = cueStickCOR
-        self.strikePtDistFromCenter = strikePtDistFromCenter
-        self.strikePtAngle = strikePtAngle
+        self.strikePtX = strikePtX
+        self.strikePtY = strikePtY
         self.shotAzmuth = shotAzmuth
         self.cueBall = cueBall
         
@@ -59,6 +60,9 @@ class Shot(object):
         stickForce = self.cueStickMass * self.cueStickVelocity / 0.5
         #assume stick force is applied to the ball for 0.1 sec
         ballVel = stickForce * 0.1 / (self.cueBall.mass)
+        
+        self.cueBall.topSpin = self.strikePtX * stickForce * 0.1 / self.cueBall.momentOfInertia
+        self.cueBall.english = self.strikePtY * stickForce * 0.1 / self.cueBall.momentOfInertia
         self.cueBall.Vel.x = math.cos(self.shotAzmuth)*ballVel
         self.cueBall.Vel.y = math.sin(self.shotAzmuth)*ballVel
         return self.cueBall
