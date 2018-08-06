@@ -7,9 +7,10 @@ Created on Thu Jul 12 15:53:17 2018
 import tableballdefs
 import collision
 import plotballs
+import rotation
+
 import math
 import itertools
-
 
 
 def main():
@@ -35,7 +36,7 @@ def main():
     
     brakeAzmuth = math.atan2(ballList[1].Loc.y - ballList[0].Loc.y, ballList[1].Loc.x - ballList[0].Loc.x)
     
-    brake = tableballdefs.Shot(ballList[0], 3, brakeAzmuth)
+    brake = tableballdefs.Shot(ballList[0], 4, brakeAzmuth)
     brake.execute()
     ballsMoving = True
     timeStep = 0.01
@@ -55,18 +56,27 @@ def main():
             else:
                 ballsMoving = True
                 #check to see if the ball has hit a wall, if so reverse the velocity dir
-                if ball.Loc.x + ball.radius >= table.length or ball.Loc.x - ball.radius <= 0 : 
+                if ball.Loc.x + ball.radius >= table.length : 
                     ball.Vel.x = -1 * table.cushionBounce * ball.Vel.x
-                if ball.Loc.y + ball.radius >= table.width or ball.Loc.y - ball.radius <= 0 : 
+                    ball.Loc.x = table.length - ball.radius
+                elif ball.Loc.x - ball.radius <= 0 :
+                    ball.Vel.x = -1 * table.cushionBounce * ball.Vel.x
+                    ball.Loc.x = ball.radius
+                if ball.Loc.y + ball.radius >= table.width : 
                     ball.Vel.y = -1 * table.cushionBounce * ball.Vel.y
-                
+                    ball.Loc.y = table.width - ball.radius
+                elif ball.Loc.y - ball.radius <= 0 :
+                    ball.Vel.y = -1 * table.cushionBounce * ball.Vel.y
+                    ball.Loc.y = ball.radius
                 #update the ball velocity from the acceleration
                 ball.Loc.x = ball.Loc.x + (ball.Vel.x * timeStep)
                 ball.Loc.y = ball.Loc.y + (ball.Vel.y * timeStep)
                 plot.plotPoint(k, ball.Loc.x, ball.Loc.y)
                 
+                frictionForce = rotation.Solve(ball, table, timeStep)
+                
                 #calculate the acceleration based on the table and ball conditions
-                acc = -(2*9.8*table.feltThickness)/(3*ball.radius*ball.radius)
+                acc = -(2*9.8*table.feltThickness)/(3*ball.radius*ball.radius) + (frictionForce/ball.mass)
                 
                 alpha = math.atan2(ball.Vel.y,ball.Vel.x)
                 

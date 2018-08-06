@@ -17,7 +17,7 @@ class Vector(object):
 
 class Table(object):
     
-    def __init__(self, length = 9, feltThickness = 0.000025, feltFrictionCo = 0.1, cushionBounce = 0.9):
+    def __init__(self, length = 9, feltThickness = 0.000025, feltFrictionCo = 0.01, cushionBounce = 0.9):
         #convert feet to meters
         self.length = length * 0.3048
         #standard table width is half the length then convert to meters
@@ -43,7 +43,7 @@ class Ball(object):
         
 class Shot(object):
     
-    def __init__(self, cueBall, cueStickVelocity = 2, shotAzmuth = 0, cueStickMass = 20, cueStickCOR = 0.98, strikePtX = 0, strikePtY = 0):
+    def __init__(self, cueBall, cueStickVelocity = 2, shotAzmuth = 0, strikePtX = 0, strikePtY = 0, cueStickMass = 20, cueStickCOR = 0.98):
         #convert oz to kg
         self.cueStickMass = cueStickMass * 0.0283495
         self.cueStickVelocity = cueStickVelocity
@@ -61,8 +61,9 @@ class Shot(object):
         #assume stick force is applied to the ball for 0.1 sec
         ballVel = stickForce * 0.1 / (self.cueBall.mass)
         
-        self.cueBall.topSpin = self.strikePtX * stickForce * 0.1 / self.cueBall.momentOfInertia
-        self.cueBall.english = self.strikePtY * stickForce * 0.1 / self.cueBall.momentOfInertia
+        #strikePtY is the distance above or below center and strikePtX is the distance left or right of center
+        self.cueBall.topSpin = self.strikePtY * stickForce * 0.1 / self.cueBall.momentOfInertia
+        self.cueBall.english = self.strikePtX * stickForce * 0.1 / self.cueBall.momentOfInertia
         self.cueBall.Vel.x = math.cos(self.shotAzmuth)*ballVel
         self.cueBall.Vel.y = math.sin(self.shotAzmuth)*ballVel
         return self.cueBall
