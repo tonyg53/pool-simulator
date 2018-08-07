@@ -38,8 +38,7 @@ def Solve(ball, table, timeStep):
         alpha = torqueFriction / ball.momentOfInertia
         ball.topSpin = ball.topSpin - (alpha * timeStep)
         return frictionForce
-        
-        
+
     
 if __name__ == "__main__":
     Test()

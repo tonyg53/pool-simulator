@@ -7,7 +7,8 @@ Created on Thu Jul 12 15:53:17 2018
 import tableballdefs
 import collision
 import plotballs
-import rotation
+import topspin
+import cushion
 
 import math
 import itertools
@@ -55,25 +56,15 @@ def main():
                     
             else:
                 ballsMoving = True
-                #check to see if the ball has hit a wall, if so reverse the velocity dir
-                if ball.Loc.x + ball.radius >= table.length : 
-                    ball.Vel.x = -1 * table.cushionBounce * ball.Vel.x
-                    ball.Loc.x = table.length - ball.radius
-                elif ball.Loc.x - ball.radius <= 0 :
-                    ball.Vel.x = -1 * table.cushionBounce * ball.Vel.x
-                    ball.Loc.x = ball.radius
-                if ball.Loc.y + ball.radius >= table.width : 
-                    ball.Vel.y = -1 * table.cushionBounce * ball.Vel.y
-                    ball.Loc.y = table.width - ball.radius
-                elif ball.Loc.y - ball.radius <= 0 :
-                    ball.Vel.y = -1 * table.cushionBounce * ball.Vel.y
-                    ball.Loc.y = ball.radius
+                #check to see if the ball has hit a wall, if so solve the new velocity
+                cushion.Carom(ball, table, timeStep)
+                
                 #update the ball velocity from the acceleration
                 ball.Loc.x = ball.Loc.x + (ball.Vel.x * timeStep)
                 ball.Loc.y = ball.Loc.y + (ball.Vel.y * timeStep)
                 plot.plotPoint(k, ball.Loc.x, ball.Loc.y)
                 
-                frictionForce = rotation.Solve(ball, table, timeStep)
+                frictionForce = topspin.Solve(ball, table, timeStep)
                 
                 #calculate the acceleration based on the table and ball conditions
                 acc = -(2*9.8*table.feltThickness)/(3*ball.radius*ball.radius) + (frictionForce/ball.mass)
