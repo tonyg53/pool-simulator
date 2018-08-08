@@ -8,53 +8,95 @@ import tableballdefs
 
 def Carom(ball, table, timeStep):
     
-    if ball.Loc.x + ball.radius >= table.length :
+    rightRail = ball.Loc.x + ball.radius >= table.length
+    leftRail = ball.Loc.x - ball.radius <= 0
+    topRail = ball.Loc.y + ball.radius >= table.width
+    bottomRail = ball.Loc.y - ball.radius <= 0
+    noEnglish = ball.english == 0
+    posEnglish = ball.english > 0
+    negEnglish = ball.english < 0
+    
+    if rightRail or leftRail:
         prevVel = ball.Vel.x
         ball.Vel.x = -1 * table.cushionBounce * ball.Vel.x
-        ball.Loc.x = table.length - ball.radius
         
-        if ball.english == 0 : return True
-        elif ball.english < 0 :
-            accX = (prevVel - ball.Vel.x)/(timeStep)
-            normal = accX * ball.mass
-            frictionForce = normal * table.feltFrictionCo
+        if rightRail : ball.Loc.x = table.length - ball.radius
+        else : ball.Loc.x = ball.radius
+        
+        if noEnglish and ball.Vel.x == 0: return True
+        
+        frictionForce = CalcFF(prevVel, ball.Vel.x, timeStep, ball.mass, table.feltFrictionCo)
+        accY = CalcAccPara(frictionForce, ball.mass)
+        alpha = CalcAlpha(frictionForce, ball.radius, ball.momentOfInertia)
+        
+        if negEnglish and rightRail:
             ball.Vel.y += (accY * timeStep)
-            torqueFriction = frictionForce * ball.radius
-            alpha = torqueFriction / ball.momentOfInertia
-            print(ball.english)
+            ball.english += (alpha * timeStep)
+            
+        elif posEnglish and rightRail:
+            ball.Vel.y -= (accY * timeStep)
             ball.english -= (alpha * timeStep)
-        elif ball.english > 0 :
+            
+        elif negEnglish and leftRail:
+            ball.Vel.y += (accY * timeStep)
+            ball.english -= (alpha * timeStep)
+            
+        elif posEnglish and leftRail:
+            ball.Vel.y -= (accY * timeStep)
+            ball.english += (alpha * timeStep)
         
         return True
     
-    elif ball.Loc.x - ball.radius <= 0 :
-        ball.Vel.x = -1 * table.cushionBounce * ball.Vel.x
-        ball.Loc.x = ball.radius
-        
-        return True
-    
-    if ball.Loc.y + ball.radius >= table.width : 
+    if topRail or bottomRail : 
+        prevVel = ball.Vel.y
         ball.Vel.y = -1 * table.cushionBounce * ball.Vel.y
-        ball.Loc.y = table.width - ball.radius
         
-        return True
-    
-    elif ball.Loc.y - ball.radius <= 0 :
-        ball.Vel.y = -1 * table.cushionBounce * ball.Vel.y
-        ball.Loc.y = ball.radius
+        if topRail : ball.Loc.y = table.width - ball.radius
+        else : ball.Loc.y = ball.radius
         
+        if noEnglish and ball.Vel.x == 0: return True
+        
+        frictionForce = CalcFF(prevVel, ball.Vel.y, timeStep, ball.mass, table.feltFrictionCo)
+        accX = CalcAccPara(frictionForce, ball.mass)
+        alpha = CalcAlpha(frictionForce, ball.radius, ball.momentOfInertia)
+        
+        if negEnglish and topRail:
+            ball.Vel.x -= (accX * timeStep)
+            ball.english += (alpha * timeStep)
+            
+        elif posEnglish and topRail:
+            ball.Vel.x += (accX * timeStep)
+            ball.english -= (alpha * timeStep)
+            
+        elif negEnglish and bottomRail:
+            ball.Vel.x -= (accX * timeStep)
+            ball.english -= (alpha * timeStep)
+            
+        elif posEnglish and bottomRail:
+            ball.Vel.x += (accX * timeStep)
+            ball.english += (alpha * timeStep)
+            
         return True
     
     return False
     
-def CalcAcc(v0, v1, timeStep):
-    return (v0 - v1) / timeStep
+def CalcFF(v0, v1, timeStep, mass, coef):
+    acc = (v0 - v1) / timeStep
+    norm = acc * mass
+    return norm * coef
+
+def CalcAccPara(ff, mass):
+    return ff / mass
+
+def CalcAlpha(ff, radius, moi):
+    torq = ff * radius
+    return torq / moi
     
 
 if __name__ == "__main__":
     
     table = tableballdefs.Table()
-    ball = tableballdefs.Ball(1,0,table.length,table.width/2,-2,0)
+    ball = tableballdefs.Ball(0,-1,table.length/2,0,2,0)
     
     Carom(ball, table, 0.01)
     
