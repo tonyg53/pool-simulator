@@ -11,7 +11,7 @@ class PlotBalls(object):
     
     def __init__(self, numBalls=1, table = tableballdefs.Table()):
         self.table = table
-        self.markerList = ['ro', 'bo', 'go', 'mo']
+        self.markerList = ['ro', 'bo', 'go', 'mo', 'co', 'yo', 'ko']
         if numBalls > len(self.markerList): raise "too many balls to plot"
         v = [0, self.table.length, 0, self.table.width]
         plt.axis(v)

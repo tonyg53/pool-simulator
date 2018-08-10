@@ -13,80 +13,63 @@ import cushion
 import math
 import itertools
 
-
-def main():
-    table = tableballdefs.Table()
-    ballList = []
-    numBalls = 4
-    plot = plotballs.PlotBalls(numBalls, table)
+class Simulation(object):
     
-    for i in range(0,numBalls):
-        ballList.append( tableballdefs.Ball() )
+    def __init__(self, numballs, ballList, shot, table = tableballdefs.Table()):
+        self.table = table
+        self.ballList = ballList
+        self.numballs = numballs
+        self.shot = shot
+        self.plot = plotballs.PlotBalls(self.numballs, self.table)
         
-    ballList[0].Loc.x = table.length / 5
-    ballList[0].Loc.y = table.width / 3
-    ballList[1].Loc.x = table.length * 3 / 4
-    ballList[1].Loc.y = table.width / 2 + 0.01
-    ballList[2].Loc.x = ballList[1].Loc.x + 0.01 + math.cos(math.radians(60))*ballList[1].radius
-    ballList[2].Loc.y = ballList[1].Loc.y + math.sin(math.radians(60))*ballList[1].radius
-    ballList[3].Loc.x = ballList[1].Loc.x + math.cos(math.radians(60))*ballList[1].radius
-    ballList[3].Loc.y = ballList[1].Loc.y - 0.01 - math.sin(math.radians(60))*ballList[1].radius
-    
-    for i, ball in enumerate(ballList):
-        plot.plotPoint(i, ball.Loc.x, ball.Loc.y)
-    
-    brakeAzmuth = math.atan2(ballList[1].Loc.y - ballList[0].Loc.y, ballList[1].Loc.x - ballList[0].Loc.x)
-    
-    brake = tableballdefs.Shot(ballList[0], 4, brakeAzmuth)
-    brake.execute()
-    ballsMoving = True
-    timeStep = 0.01
-    stopVel = 0.05
-    elapsedTime = 0
-    
-    
-    while ballsMoving :
-        countStoppedBalls = 0
-        for k, ball in enumerate(ballList): 
+    def run(self):
             
-            if ball.Vel.getLength() <= stopVel: 
-                ball.zeroVel()
-                countStoppedBalls = countStoppedBalls + 1
+        for i, ball in enumerate(self.ballList):
+            self.plot.plotPoint(i, ball.Loc.x, ball.Loc.y)
+            
+        self.shot.execute()
+        ballsMoving = True
+        timeStep = 0.01
+        stopVel = 0.05
+        elapsedTime = 0
+        
+        while ballsMoving :
+            countStoppedBalls = 0
+            for k, ball in enumerate(self.ballList): 
                 
+                if ball.Vel.getLength() <= stopVel: 
+                    ball.zeroVel()
+                    countStoppedBalls = countStoppedBalls + 1
                     
-            else:
-                ballsMoving = True
-                #check to see if the ball has hit a wall, if so solve the new velocity
-                cushion.Carom(ball, table, timeStep)
+                        
+                else:
+                    ballsMoving = True
+                    #check to see if the ball has hit a wall, if so solve the new velocity
+                    cushion.Carom(ball, self.table, timeStep)
+                    
+                    #update the ball velocity from the acceleration
+                    ball.Loc.x = ball.Loc.x + (ball.Vel.x * timeStep)
+                    ball.Loc.y = ball.Loc.y + (ball.Vel.y * timeStep)
+                    self.plot.plotPoint(k, ball.Loc.x, ball.Loc.y)
+                    
+                    frictionForce = topspin.Solve(ball, self.table, timeStep)
+                    
+                    #calculate the acceleration based on the table and ball conditions
+                    acc = -(2*9.8*self.table.feltThickness)/(3*ball.radius*ball.radius) + (frictionForce/ball.mass)
+                    
+                    alpha = math.atan2(ball.Vel.y,ball.Vel.x)
+                    
+                    xAcc = math.cos(alpha) * acc
+                    yAcc = math.sin(alpha) * acc
+                    
+                    ball.Vel.x = ball.Vel.x + (xAcc * timeStep)
+                    ball.Vel.y = ball.Vel.y + (yAcc * timeStep)
+                     
+            for ball1, ball2 in itertools.combinations(self.ballList, 2):
+                 if collision.happened(ball1, ball2) : collision.run(ball1, ball2)
                 
-                #update the ball velocity from the acceleration
-                ball.Loc.x = ball.Loc.x + (ball.Vel.x * timeStep)
-                ball.Loc.y = ball.Loc.y + (ball.Vel.y * timeStep)
-                plot.plotPoint(k, ball.Loc.x, ball.Loc.y)
-                
-                frictionForce = topspin.Solve(ball, table, timeStep)
-                
-                #calculate the acceleration based on the table and ball conditions
-                acc = -(2*9.8*table.feltThickness)/(3*ball.radius*ball.radius) + (frictionForce/ball.mass)
-                
-                alpha = math.atan2(ball.Vel.y,ball.Vel.x)
-                
-                xAcc = math.cos(alpha) * acc
-                yAcc = math.sin(alpha) * acc
-                
-                ball.Vel.x = ball.Vel.x + (xAcc * timeStep)
-                ball.Vel.y = ball.Vel.y + (yAcc * timeStep)
-                 
-        for ball1, ball2 in itertools.combinations(ballList, 2):
-             if collision.happened(ball1, ball2) : collision.run(ball1, ball2)
+            if countStoppedBalls == self.numballs : ballsMoving = False
+            elapsedTime = elapsedTime + timeStep
             
-        if countStoppedBalls == numBalls : ballsMoving = False
-        elapsedTime = elapsedTime + timeStep
-        
-    
+        return self.ballList
             
-    return      
-            
-
-if __name__ == "__main__":
-    main()

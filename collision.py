@@ -21,7 +21,7 @@ def run(ball1, ball2):
     dist = math.hypot(ball2.Loc.x - ball1.Loc.x, ball2.Loc.y - ball1.Loc.y)
     
     if dist < (ball1.radius) + (ball2.radius):
-        moveDist = ((ball1.radius) + (ball2.radius)) / 2
+        moveDist = ((ball1.radius) /2)#+ (ball2.radius)) / 2
         B1x = ball1.Loc.x - moveDist * math.cos(collisionAngle)
         B1y = ball1.Loc.y - moveDist * math.sin(collisionAngle)
         B2x = ball2.Loc.x + moveDist * math.cos(collisionAngle)
