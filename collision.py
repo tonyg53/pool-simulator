@@ -21,7 +21,7 @@ def run(ball1, ball2):
     dist = math.hypot(ball2.Loc.x - ball1.Loc.x, ball2.Loc.y - ball1.Loc.y)
     
     if dist < (ball1.radius) + (ball2.radius):
-        moveDist = ((ball1.radius) /2)#+ (ball2.radius)) / 2
+        moveDist = ((ball1.radius + ball2.radius) - dist)/2
         B1x = ball1.Loc.x - moveDist * math.cos(collisionAngle)
         B1y = ball1.Loc.y - moveDist * math.sin(collisionAngle)
         B2x = ball2.Loc.x + moveDist * math.cos(collisionAngle)
@@ -38,14 +38,13 @@ def run(ball1, ball2):
     dir1 = math.atan2(ball1.Vel.y, ball1.Vel.x)
     dir2 = math.atan2(ball2.Vel.y, ball2.Vel.x)
     
-    
     newXSpeed1 = speed1 * math.cos(dir1 - collisionAngle)
     newYSpeed1 = speed1 * math.sin(dir1 - collisionAngle)
     newXSpeed2 = speed2 * math.cos(dir2 - collisionAngle)
     newYSpeed2 = speed2 * math.sin(dir2 - collisionAngle)
     
-    finalXSpeed1 = ((ball1.mass - ball2.mass) * newXSpeed1 + (ball2.mass + ball2.mass) * newXSpeed2) / (ball1.mass + ball2.mass)
-    finalXSpeed2 = ((ball1.mass + ball2.mass) * newXSpeed1 + (ball2.mass - ball1.mass) * newXSpeed2) / (ball1.mass + ball1.mass)
+    finalXSpeed1 = newXSpeed2
+    finalXSpeed2 = newXSpeed1
     
     finalYSpeed1 = newYSpeed1
     finalYSpeed2 = newYSpeed2
@@ -57,10 +56,23 @@ def run(ball1, ball2):
     ball1.Vel.y = sinAngle * finalXSpeed1 + cosAngle * finalYSpeed1
     ball2.Vel.x = cosAngle * finalXSpeed2 - sinAngle * finalYSpeed2
     ball2.Vel.y = sinAngle * finalXSpeed2 + cosAngle * finalYSpeed2
-        
+    
+    newDir1 = math.atan2(ball1.Vel.y, ball1.Vel.x)
+    newDir2 = math.atan2(ball2.Vel.y, ball2.Vel.x)
+    
+    deflectionAngle1 = newDir1 - dir1
+    deflectionAngle2 = newDir2 - dir2
+    
+    ball1.sideSpin += ball1.topSpin * math.sin(deflectionAngle1)
+    ball2.sideSpin += ball2.topSpin * math.sin(deflectionAngle2)
+    
+    ball1.topSpin *= math.cos(deflectionAngle1)
+    ball2.topSpin *= math.cos(deflectionAngle2)
+    
+    
 if __name__ == "__main__":
-    ball1 = tableballdefs.Ball(0,    0,0.68,  0.68,0,0)
-    ball2 = tableballdefs.Ball(-1.50,0,0.7372,0.68,0,0)
+    ball1 = tableballdefs.Ball(1.5,    0,     1,   1,0,1)
+    ball2 = tableballdefs.Ball(  0,-1.50,1.0284,1.04,0,0)
     if happened(ball1, ball2):
         run(ball1, ball2)
     else: print("no collision")

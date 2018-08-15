@@ -21,7 +21,7 @@ class Setup(object):
     def SetupSim(self):
                 
         brakeAzmuth = math.atan2(self.ballList[1].Loc.y - self.ballList[0].Loc.y, self.ballList[1].Loc.x - self.ballList[0].Loc.x)
-        shot = tableballdefs.Shot(self.ballList[0], 2, brakeAzmuth, 0, self.ballList[0].radius/2)
+        shot = tableballdefs.Shot(self.ballList[0], 2.5, brakeAzmuth, 0, self.ballList[0].radius/2)
         sim = simulation.Simulation(self.numballs, self.ballList, shot, self.table)
         sim.run()
     
@@ -32,14 +32,14 @@ def Rack(numBalls, table):
         ballList.append(tableballdefs.Ball())
     
     if len(ballList) == 4:
-        ballList[0].Loc.x = table.length / 4
-        ballList[0].Loc.y = table.width / 2
+        ballList[0].Loc.x = table.length / 5
+        ballList[0].Loc.y = table.width / 3
         ballList[1].Loc.x = table.length * 3 / 4
         ballList[1].Loc.y = table.width / 2
-        ballList[2].Loc.x = ballList[1].Loc.x + random.random()/100 + math.cos(math.radians(60))*ballList[1].radius
+        ballList[2].Loc.x = ballList[1].Loc.x + random.random()/500 + math.cos(math.radians(60))*ballList[1].radius
         ballList[2].Loc.y = ballList[1].Loc.y + math.sin(math.radians(60))*ballList[1].radius
         ballList[3].Loc.x = ballList[1].Loc.x + math.cos(math.radians(60))*ballList[1].radius
-        ballList[3].Loc.y = ballList[1].Loc.y - random.random()/100 - math.sin(math.radians(60))*ballList[1].radius
+        ballList[3].Loc.y = ballList[1].Loc.y - random.random()/500 - math.sin(math.radians(60))*ballList[1].radius
         
     return ballList
     
