@@ -12,43 +12,35 @@ def Test():
     ball = tableballdefs.Ball(1,1,0,0,0,-105,100)
     table = tableballdefs.Table()
     timeStep = 0.1
-    frictionForceFWD = TopSpin(ball, table, timeStep)
-    frictionForceSide = SideSpin(ball, table, timeStep)
+    frictionForceX = SpinX(ball, table, timeStep)
+    frictionForceY = SpinY(ball, table, timeStep)
     
-    while frictionForceFWD != 0 or frictionForceSide != 0:
-        frictionForceFWD = TopSpin(ball, table, timeStep)
-        frictionForceSide = SideSpin(ball, table, timeStep)
+    while frictionForceX != 0 or frictionForceY != 0:
+        frictionForceX = SpinX(ball, table, timeStep)
+        frictionForceY = SpinY(ball, table, timeStep)
         
-        print("topSpin ",ball.topSpin * ball.radius, " sideSpin ",ball.sideSpin * ball.radius, " velocity ", ball.Vel.getLength(), " fwd FF ", frictionForceFWD, " side FF ", frictionForceSide)
-
-def TopSpin(ball, table, timeStep):
-    vel = ball.Vel.getLength()
+def SpinX(ball, table, timeStep):
     alpha = SolveAlpha(ball.mass, ball.radius, ball.momentOfInertia, table.feltFrictionCo)
     ff = SolveFF(ball.mass, table.feltFrictionCo)
-    if DidBallGrip(vel, alpha, timeStep, ball.topSpin, ball.radius): 
-        ball.topSpin = vel/ball.radius
-        return 0
-    if vel > ball.topSpin * ball.radius:
-        ff *= -1
-    if vel < ball.topSpin * ball.radius:
-        alpha *= -1
-    ball.topSpin += alpha * timeStep
+    
+    if DidBallGrip(ball.Vel.y, alpha, timeStep, ball.spinX, ball.radius):
+        ball.spinX = -1 * ball.Vel.y / ball.radius
+        return 0 
+    if ball.Vel.y > -1 * ball.spinX * ball.radius: ff *= -1
+    if ball.Vel.y < -1 * ball.spinX * ball.radius: alpha *= -1
+    ball.spinX += alpha * timeStep
     return ff
 
-def SideSpin(ball, table, timeStep):
-    if ball.sideSpin == 0 : 
-        return 0
+def SpinY(ball, table, timeStep):
     alpha = SolveAlpha(ball.mass, ball.radius, ball.momentOfInertia, table.feltFrictionCo)
-
     ff = SolveFF(ball.mass, table.feltFrictionCo)
-    if ball.sideSpin > 0 : 
-        alpha *= -1
-    if ball.sideSpin < 0 :
-        ff *= -1
-    if abs(alpha * timeStep) >= abs(ball.sideSpin):
-        ball.sideSpin = 0
+    
+    if DidBallGrip(ball.Vel.x, alpha, timeStep, ball.spinY, ball.radius):
+        ball.spinY = ball.Vel.x / ball.radius
         return 0
-    ball.sideSpin += alpha * timeStep
+    if ball.Vel.x > ball.spinY * ball.radius: ff *= -1
+    if ball.Vel.x < ball.spinY * ball.radius: alpha *= -1
+    ball.spinY += alpha * timeStep
     return ff
     
 def SolveAlpha(mass, radius, moi, frictionCo):

@@ -41,7 +41,6 @@ class Simulation(object):
                     ball.zeroVel()
                     countStoppedBalls = countStoppedBalls + 1
                     
-                        
                 else:
                     ballsMoving = True
                     
@@ -54,18 +53,16 @@ class Simulation(object):
                     cushion.Carom(ball, self.table, timeStep)
                     
                     #apply friction
-                    frictionForceFWD = spin.TopSpin(ball, self.table, timeStep)
-                    frictionForceSide = spin.SideSpin(ball, self.table, timeStep)
+                    frictionForceX = spin.SpinX(ball, self.table, timeStep)
+                    frictionForceY = spin.SpinY(ball, self.table, timeStep)
                     
                     #calculate the acceleration based on the table and ball conditions
-                    accFwd = -(2*9.8*self.table.feltThickness)/(3*ball.radius*ball.radius) + (frictionForceFWD/ball.mass)
-                    accSide = frictionForceSide/ball.mass
+                    acc = -(2*9.8*self.table.feltThickness)/(3*ball.radius*ball.radius)
                     
                     alpha = math.atan2(ball.Vel.y,ball.Vel.x)
-                    beta = 90 - alpha
                     
-                    xAcc = math.cos(alpha) * accFwd - math.cos(beta) * accSide
-                    yAcc = math.sin(alpha) * accFwd + math.sin(beta) * accSide
+                    xAcc = math.cos(alpha) * acc + frictionForceX/ball.mass
+                    yAcc = math.sin(alpha) * acc + frictionForceY/ball.mass
                     
                     ball.Vel.x = ball.Vel.x + (xAcc * timeStep)
                     ball.Vel.y = ball.Vel.y + (yAcc * timeStep)
@@ -73,9 +70,6 @@ class Simulation(object):
             for ball1, ball2 in itertools.combinations(self.ballList, 2):
                  if collision.happened(ball1, ball2) : 
                      collision.run(ball1, ball2)
-                     ffFwd = spin.TopSpin(ball1, self.table, timeStep)
-                     ffSd = spin.SideSpin(ball1, self.table, timeStep)
-                     print(ffFwd, ffSd)
                 
             if countStoppedBalls == self.numballs : ballsMoving = False
             elapsedTime = elapsedTime + timeStep

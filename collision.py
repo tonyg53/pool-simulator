@@ -57,18 +57,6 @@ def run(ball1, ball2):
     ball2.Vel.x = cosAngle * finalXSpeed2 - sinAngle * finalYSpeed2
     ball2.Vel.y = sinAngle * finalXSpeed2 + cosAngle * finalYSpeed2
     
-    newDir1 = math.atan2(ball1.Vel.y, ball1.Vel.x)
-    newDir2 = math.atan2(ball2.Vel.y, ball2.Vel.x)
-    
-    deflectionAngle1 = newDir1 - dir1
-    deflectionAngle2 = newDir2 - dir2
-    
-    ball1.sideSpin += ball1.topSpin * math.sin(deflectionAngle1)
-    ball2.sideSpin += ball2.topSpin * math.sin(deflectionAngle2)
-    
-    ball1.topSpin *= math.cos(deflectionAngle1)
-    ball2.topSpin *= math.cos(deflectionAngle2)
-    
     
 if __name__ == "__main__":
     ball1 = tableballdefs.Ball(1.5,    0,     1,   1,0,1)

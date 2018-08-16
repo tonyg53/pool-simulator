@@ -28,15 +28,15 @@ class Table(object):
 
 class Ball(object):
     
-    def __init__(self, xVel = 0, yVel = 0, xLoc = 0, yLoc = 0, english = 0, topSpin = 0, sideSpin = 0):
+    def __init__(self, xVel = 0, yVel = 0, xLoc = 0, yLoc = 0, spinX = 0, spinY = 0, spinZ = 0):
         self.radius = 0.0286
         self.mass = 0.165
         self.elasticity = 0.99
         self.Vel = Vector(xVel,yVel)
         self.Loc = Vector(xLoc,yLoc)
-        self.english = english
-        self.topSpin = topSpin
-        self.sideSpin = sideSpin
+        self.spinX = spinX
+        self.spinY = spinY
+        self.spinZ = spinZ
         self.momentOfInertia = (2/5)*self.mass*self.radius*self.radius
         
     def zeroVel(self):
