@@ -45,16 +45,16 @@ class Simulation(object):
                     ballsMoving = True
                     
                     #update the ball location
-                    ball.Loc.x = ball.Loc.x + (ball.Vel.x * timeStep)
-                    ball.Loc.y = ball.Loc.y + (ball.Vel.y * timeStep)
+                    ball.Loc.x += (ball.Vel.x * timeStep)
+                    ball.Loc.y += (ball.Vel.y * timeStep)
                     self.plot.plotPoint(k, ball.Loc.x, ball.Loc.y)
                     
                     #check to see if the ball has hit a wall, if so solve the new velocity
                     cushion.Carom(ball, self.table, timeStep)
                     
                     #apply friction
-                    frictionForceX = spin.SpinX(ball, self.table, timeStep)
-                    frictionForceY = spin.SpinY(ball, self.table, timeStep)
+                    frictionForceY = spin.SpinX(ball, self.table, timeStep)
+                    frictionForceX = spin.SpinY(ball, self.table, timeStep)
                     
                     #calculate the acceleration based on the table and ball conditions
                     acc = -(2*9.8*self.table.feltThickness)/(3*ball.radius*ball.radius)
@@ -72,7 +72,8 @@ class Simulation(object):
                      collision.run(ball1, ball2)
                 
             if countStoppedBalls == self.numballs : ballsMoving = False
-            elapsedTime = elapsedTime + timeStep
-            
+            elapsedTime += timeStep
+        
+        self.plot.showPlot()
         return self.ballList
             

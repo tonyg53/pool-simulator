@@ -36,10 +36,10 @@ def Rack(numBalls, table):
         ballList[0].Loc.y = table.width / 3
         ballList[1].Loc.x = table.length * 3 / 4
         ballList[1].Loc.y = table.width / 2
-        ballList[2].Loc.x = ballList[1].Loc.x + random.random()/500 + math.cos(math.radians(60))*ballList[1].radius
-        ballList[2].Loc.y = ballList[1].Loc.y + math.sin(math.radians(60))*ballList[1].radius
-        ballList[3].Loc.x = ballList[1].Loc.x + math.cos(math.radians(60))*ballList[1].radius
-        ballList[3].Loc.y = ballList[1].Loc.y - random.random()/500 - math.sin(math.radians(60))*ballList[1].radius
+        ballList[2].Loc.x = ballList[1].Loc.x + random.random()/100 + math.cos(math.radians(60))*ballList[1].radius
+        ballList[2].Loc.y = ballList[1].Loc.y + random.random()/100 + math.sin(math.radians(60))*ballList[1].radius
+        ballList[3].Loc.x = ballList[1].Loc.x + random.random()/100 + math.cos(math.radians(60))*ballList[1].radius
+        ballList[3].Loc.y = ballList[1].Loc.y - random.random()/100 - math.sin(math.radians(60))*ballList[1].radius
         
     return ballList
     

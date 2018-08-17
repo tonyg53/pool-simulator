@@ -9,7 +9,7 @@ import tableballdefs
 
 
 def Test():
-    ball = tableballdefs.Ball(1,1,0,0,0,-105,100)
+    ball = tableballdefs.Ball(1,0,0,0,0,100,100)
     table = tableballdefs.Table()
     timeStep = 0.1
     frictionForceX = SpinX(ball, table, timeStep)
@@ -18,6 +18,7 @@ def Test():
     while frictionForceX != 0 or frictionForceY != 0:
         frictionForceX = SpinX(ball, table, timeStep)
         frictionForceY = SpinY(ball, table, timeStep)
+        print(ball.Vel.x, ball.Vel.y, frictionForceX, frictionForceY)
         
 def SpinX(ball, table, timeStep):
     alpha = SolveAlpha(ball.mass, ball.radius, ball.momentOfInertia, table.feltFrictionCo)
@@ -26,8 +27,8 @@ def SpinX(ball, table, timeStep):
     if DidBallGrip(ball.Vel.y, alpha, timeStep, ball.spinX, ball.radius):
         ball.spinX = -1 * ball.Vel.y / ball.radius
         return 0 
-    if ball.Vel.y > -1 * ball.spinX * ball.radius: ff *= -1
-    if ball.Vel.y < -1 * ball.spinX * ball.radius: alpha *= -1
+    if ball.Vel.y > ball.spinX * ball.radius: ff *= -1
+    if ball.Vel.y < ball.spinX * ball.radius: alpha *= -1
     ball.spinX += alpha * timeStep
     return ff
 
@@ -52,7 +53,7 @@ def SolveFF(mass, frictionCo):
     return mass * 9.8 * frictionCo
 
 def DidBallGrip(vel, alpha, timeStep, omega, radius):
-    if abs(abs(omega) - abs(alpha * timeStep)) * radius <= vel :
+    if abs(abs(omega) - abs(alpha * timeStep)) * radius <= abs(vel) :
         return True
     return False
     

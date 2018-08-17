@@ -41,6 +41,9 @@ class Ball(object):
         
     def zeroVel(self):
         self.Vel = Vector(0,0)
+        self.spinX = 0
+        self.spinY = 0
+        self.spinZ = 0
         
 class CueStick(object):
     
