@@ -18,6 +18,7 @@ class Setup(object):
         self.table = table
         self.ballList = Rack(numballs, table)
 
+
     def SetupSim(self):
                 
         brakeAzmuth = math.atan2(self.ballList[1].Loc.y - self.ballList[0].Loc.y, self.ballList[1].Loc.x - self.ballList[0].Loc.x)

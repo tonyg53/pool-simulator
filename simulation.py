@@ -37,7 +37,12 @@ class Simulation(object):
             countStoppedBalls = 0
             for k, ball in enumerate(self.ballList): 
                 
-                if ball.Vel.getLength() <= stopVel: 
+                if ball.Vel.getLength() <= stopVel:
+#                    alpha = spin.SolveAlpha(ball.mass, ball.radius, ball.momentOfInertia, self.table.feltFrictionCo)
+#                    if spin.DidBallGrip(ball.Vel.x, alpha, timeStep, ball.spinY, ball.radius):
+#                        print('ball griped')
+#                    else: print('ball slipped')
+                        
                     ball.zeroVel()
                     countStoppedBalls = countStoppedBalls + 1
                     
