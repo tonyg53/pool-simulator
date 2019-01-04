@@ -15,7 +15,7 @@ import itertools
 
 class Simulation(object):
     
-    def __init__(self, numballs, ballList, shot, table = tableballdefs.Table()):
+    def __init__(self, numballs, ballList, shot, table):
         self.table = table
         self.ballList = ballList
         self.numballs = numballs

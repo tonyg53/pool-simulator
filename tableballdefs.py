@@ -17,7 +17,16 @@ class Vector(object):
 
 class Table(object):
     
-    def __init__(self, length = 9, feltThickness = 0.000025, feltFrictionCo = 0.02, cushionBounce = 0.9):
+    def __init__(self, 
+                 length = 9, 
+                 feltThickness = 0.000025, 
+                 feltFrictionCo = 0.02, 
+                 cushionBounce = 0.9, 
+                 cushionThickness = 0.051, 
+                 pocketRadius = 0.0536, 
+                 cornerRadius = 0.005, 
+                 cornerPocketAngle = 45, 
+                 sidePocketAngle = 85):
         #convert feet to meters
         self.length = length * 0.3048
         #standard table width is half the length then convert to meters
@@ -25,6 +34,25 @@ class Table(object):
         self.feltThickness = feltThickness
         self.feltFrictionCo = feltFrictionCo
         self.cushionBounce = cushionBounce
+        self.cushionThickness = cushionThickness
+        self.pocketRadius = pocketRadius
+        self.cornerRadius = cornerRadius
+        self.cornerPocketAngle = cornerPocketAngle
+        self.sidePocketAngle = sidePocketAngle
+        self.cornerPocket = Pocket(self.pocketRadius, self.cornerPocketAngle, self.cornerRadius, self.cushionThickness)
+        self.sidePocket = Pocket(self.pocketRadius, self.sidePocketAngle, self.cornerRadius, self.cushionThickness)
+        
+        self.cornerPocketDepth = (self.cushionThickness / math.tan(math.radians(45))) + (2 * self.pocketRadius * math.sin(math.radians(self.cornerPocketAngle))) - self.cushionThickness
+        print(self.cornerPocketDepth)
+        
+class Pocket(object):
+    
+    def __init__(self, radius, cushionAngle, cornerRadius, cushionThickness):
+        self.radius = radius
+        self.cushionAngle = cushionAngle
+        self.cornerRadius = cornerRadius
+        self.cushionThickness = cushionThickness
+        
 
 class Ball(object):
     
@@ -62,11 +90,23 @@ class Shot(object):
         self.cueBall = cueBall
         self.cueStick = cueStick
         
+    def didMisscue(self):
+        strikeMomentArm = math.sqrt(math.pow(self.strikePtX,2)+math.pow(self.strikePtY,2))
+        
+        if strikeMomentArm > self.cueBall.radius/2 : 
+            print("misscue")
+            return True
+        
+        return False
+        
     def execute(self):
         if self.cueBall.Vel.getLength() != 0 : raise "wait for balls to stop"
 
         #assume stick is accelerated for 0.5 sec
         stickForce = self.cueStick.mass * self.cueStickVelocity / 0.5
+        
+        self.didMisscue()
+        
         #assume stick force is applied to the ball for 0.1 sec
         ballVel = stickForce * 0.1 / self.cueBall.mass
         

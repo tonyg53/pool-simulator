@@ -11,10 +11,10 @@ import math
 
 def Carom(ball, table, timeStep):
     
-    rightRail = ball.Loc.x + ball.radius >= table.length
-    leftRail = ball.Loc.x - ball.radius <= 0
-    topRail = ball.Loc.y + ball.radius >= table.width
-    bottomRail = ball.Loc.y - ball.radius <= 0
+    rightRail = ball.Loc.x + ball.radius + table.cushionThickness >= table.length
+    leftRail = ball.Loc.x - ball.radius - table.cushionThickness <= 0
+    topRail = ball.Loc.y + ball.radius + table.cushionThickness >= table.width
+    bottomRail = ball.Loc.y - ball.radius - table.cushionThickness <= 0
     noEnglish = ball.spinZ == 0
     posEnglish = ball.spinZ > 0
     negEnglish = ball.spinZ < 0
@@ -30,7 +30,7 @@ def Carom(ball, table, timeStep):
     if rightRail or leftRail:
         prevXvel = ball.Vel.x
         ball.Vel.x *= -1 * table.cushionBounce
-        ball.Loc.x = table.length - ball.radius if rightRail else ball.radius
+        ball.Loc.x = table.length - table.cushionThickness - ball.radius if rightRail else table.cushionThickness + ball.radius
         accX = prevXvel - ball.Vel.x / timeStep
         normalF = ball.mass * accX
         ffy = normalF * table.feltFrictionCo
@@ -46,7 +46,7 @@ def Carom(ball, table, timeStep):
     elif topRail or bottomRail:
         prevYvel = ball.Vel.y
         ball.Vel.y *= -1 * table.cushionBounce
-        ball.Loc.y = table.width - ball.radius if topRail else ball.radius
+        ball.Loc.y = table.width - table.cushionThickness - ball.radius if topRail else table.cushionThickness + ball.radius
         accY = prevYvel - ball.Vel.y / timeStep
         normalF = ball.mass * accY
         ffX = normalF * table.feltFrictionCo

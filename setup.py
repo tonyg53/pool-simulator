@@ -13,7 +13,7 @@ import random
 
 class Setup(object):
     
-    def __init__(self, numballs = 4, ballList = [], table = tableballdefs.Table()):
+    def __init__(self, numballs = 7, ballList = [], table = tableballdefs.Table()):
         self.numballs = numballs
         self.table = table
         self.ballList = Rack(numballs, table)
@@ -22,7 +22,7 @@ class Setup(object):
     def SetupSim(self):
                 
         brakeAzmuth = math.atan2(self.ballList[1].Loc.y - self.ballList[0].Loc.y, self.ballList[1].Loc.x - self.ballList[0].Loc.x)
-        shot = tableballdefs.Shot(self.ballList[0], 2.75, brakeAzmuth, 0, self.ballList[0].radius/2)
+        shot = tableballdefs.Shot(self.ballList[0], 2.75, brakeAzmuth, 0, self.ballList[0].radius*0.51)
         sim = simulation.Simulation(self.numballs, self.ballList, shot, self.table)
         sim.run()
     
