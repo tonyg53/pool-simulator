@@ -22,7 +22,7 @@ class Setup(object):
     def SetupSim(self):
                 
         brakeAzmuth = math.atan2(self.ballList[1].Loc.y - self.ballList[0].Loc.y, self.ballList[1].Loc.x - self.ballList[0].Loc.x)
-        shot = tableballdefs.Shot(self.ballList[0], 2.75, brakeAzmuth, 0, self.ballList[0].radius*0.51)
+        shot = tableballdefs.Shot(self.ballList[0], 2.75, brakeAzmuth, 0, self.ballList[0].radius*0.5)
         sim = simulation.Simulation(self.numballs, self.ballList, shot, self.table)
         sim.run()
     

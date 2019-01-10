@@ -20,7 +20,7 @@ class Table(object):
     def __init__(self, 
                  length = 9, 
                  feltThickness = 0.000025, 
-                 feltFrictionCo = 0.02, 
+                 feltFrictionCo = 0.3, 
                  cushionBounce = 0.9, 
                  cushionThickness = 0.051, 
                  pocketRadius = 0.0536, 
@@ -39,19 +39,74 @@ class Table(object):
         self.cornerRadius = cornerRadius
         self.cornerPocketAngle = cornerPocketAngle
         self.sidePocketAngle = sidePocketAngle
-        self.cornerPocket = Pocket(self.pocketRadius, self.cornerPocketAngle, self.cornerRadius, self.cushionThickness)
-        self.sidePocket = Pocket(self.pocketRadius, self.sidePocketAngle, self.cornerRadius, self.cushionThickness)
         
-        self.cornerPocketDepth = (self.cushionThickness / math.tan(math.radians(45))) + (2 * self.pocketRadius * math.sin(math.radians(self.cornerPocketAngle))) - self.cushionThickness
-        print(self.cornerPocketDepth)
+        self.cornerPocketDepth = (self.cushionThickness / math.tan(math.radians(45))) + (
+                2 * self.pocketRadius * math.sin(math.radians(self.cornerPocketAngle))) - self.cushionThickness
+                
+        pocketLocationFactor = self.pocketRadius * math.sin(math.radians(45))
+        self.pocketList = []
+        p = Pocket(self.pocketRadius,
+                   self.cornerPocketAngle, 
+                   self.cornerRadius, 
+                   self.cushionThickness, 
+                   pocketLocationFactor, 
+                   pocketLocationFactor)
+        
+        self.pocketList.append(p)
+        
+        p = Pocket(self.pocketRadius,
+                   self.cornerPocketAngle, 
+                   self.cornerRadius, 
+                   self.cushionThickness, 
+                   pocketLocationFactor, 
+                   self.width - pocketLocationFactor)
+        
+        self.pocketList.append(p)
+        
+        p = Pocket(self.pocketRadius,
+                   self.cornerPocketAngle, 
+                   self.cornerRadius, 
+                   self.cushionThickness, 
+                   self.length - pocketLocationFactor, 
+                   self.width - pocketLocationFactor)
+        
+        self.pocketList.append(p)
+        
+        p = Pocket(self.pocketRadius,
+                   self.cornerPocketAngle, 
+                   self.cornerRadius, 
+                   self.cushionThickness, 
+                   self.length - pocketLocationFactor, 
+                   pocketLocationFactor)
+        
+        self.pocketList.append(p)
+        
+        p = Pocket(self.pocketRadius, 
+                                self.sidePocketAngle, 
+                                self.cornerRadius, 
+                                self.cushionThickness,
+                                self.length / 2,
+                                0)
+        
+        self.pocketList.append(p)
+        
+        p = Pocket(self.pocketRadius, 
+                                self.sidePocketAngle, 
+                                self.cornerRadius, 
+                                self.cushionThickness,
+                                self.length / 2,
+                                self.width)
+        
+        self.pocketList.append(p)
         
 class Pocket(object):
     
-    def __init__(self, radius, cushionAngle, cornerRadius, cushionThickness):
+    def __init__(self, radius, cushionAngle, cornerRadius, cushionThickness, xLoc, yLoc):
         self.radius = radius
         self.cushionAngle = cushionAngle
         self.cornerRadius = cornerRadius
         self.cushionThickness = cushionThickness
+        self.Loc = Vector(xLoc, yLoc)
         
 
 class Ball(object):
@@ -111,10 +166,13 @@ class Shot(object):
         ballVel = stickForce * 0.1 / self.cueBall.mass
         
         #strikePtY is the distance above or below center and strikePtX is the distance left or right of center
-        self.cueBall.topSpin = self.strikePtY * stickForce * 0.1 / self.cueBall.momentOfInertia
-        self.cueBall.english = self.strikePtX * stickForce * 0.1 / self.cueBall.momentOfInertia
-        self.cueBall.Vel.x = math.cos(self.shotAzmuth)*ballVel
-        self.cueBall.Vel.y = math.sin(self.shotAzmuth)*ballVel
+        topSpin = self.strikePtY * stickForce * 0.1 / self.cueBall.momentOfInertia
+        
+        self.cueBall.spinX = topSpin * math.sin(self.shotAzmuth)
+        self.cueBall.spinY = topSpin * math.cos(self.shotAzmuth)
+        self.cueBall.spinZ = self.strikePtX * stickForce * 0.1 / self.cueBall.momentOfInertia
+        self.cueBall.Vel.x = math.cos(self.shotAzmuth) * ballVel
+        self.cueBall.Vel.y = math.sin(self.shotAzmuth) * ballVel
         return self.cueBall
 
 

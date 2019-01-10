@@ -23,10 +23,13 @@ def Carom(ball, table, timeStep):
     posYvel = ball.Vel.y > 0
     negYvel = ball.Vel.y < 0
     
-    #just a quick reminder that i need to impliment logic for pocketing balls.
-    if (rightRail and (topRail or bottomRail)) or (leftRail and (topRail or bottomRail)):
-        print('ball hit 2 rails at the same time, you need to impliment pockets now')
+    #checking to see if the ball is near a pocket.
+    for pocket in table.pocketList:
+        if math.hypot(pocket.Loc.x - ball.Loc.x, pocket.Loc.y - ball.Loc.y) <= table.cornerPocketDepth:
+            print("ball near pocket")
     
+    #this kind of works, but it is not exactly right.  
+    #I should be calculating the velocity of the outside of the ball added to the linear velocity of the ball
     if rightRail or leftRail:
         prevXvel = ball.Vel.x
         ball.Vel.x *= -1 * table.cushionBounce

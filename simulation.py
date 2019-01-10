@@ -8,7 +8,7 @@ import tableballdefs
 import collision
 import plotballs
 import spin
-import cushion
+import cushion2
 
 import math
 import itertools
@@ -55,7 +55,7 @@ class Simulation(object):
                     self.plot.plotPoint(k, ball.Loc.x, ball.Loc.y)
                     
                     #check to see if the ball has hit a wall, if so solve the new velocity
-                    cushion.Carom(ball, self.table, timeStep)
+                    cushion2.Carom(ball, self.table, timeStep)
                     
                     #apply friction
                     frictionForceY = spin.SpinX(ball, self.table, timeStep)
