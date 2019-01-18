@@ -21,7 +21,8 @@ def Carom(ball, table, timeStep):
     
     for pocket in table.pocketList:
         if math.hypot(pocket.Loc.x - ball.Loc.x, pocket.Loc.y - ball.Loc.y) <= pocketProcsimity:
-            print("ball near pocket")
+            ball.pocket()
+            print("ball pocketed")
     
     #this is an attempt to fix the carom algorithm, seems to work, should test it locally
     if rightRail or leftRail:
@@ -33,14 +34,17 @@ def Carom(ball, table, timeStep):
         ffy = normalF * table.feltFrictionCo
         alphaZ = spin.SolveAlpha(ball.mass, ball.radius, ball.momentOfInertia, table.feltFrictionCo, normalF)
         if spin.DidBallGrip(ball.Vel.y, alphaZ, timeStep, ball.spinZ, ball.radius):
-            ball.spinZ = ball.Vel.y / ball.radius
-            if rightRail: ball.spinZ *= -1
+            if ball.Vel.y > 0: ffy *= -1
+            if (rightRail and ball.Vel.y > 0) or (leftRail and ball.Vel.y < 0): ball.spinZ *= -1
+            accY = ffy/ball.mass
+            ball.Vel.y += 
+            print(ball.spinZ)
             return
-        if leftRail and ball.Vel.y > ball.spinZ * ball.radius: ffy *= -1
-        if rightRail and ball.Vel.y < ball.spinZ * ball.radius: ffy *= -1
-        if leftRail and ball.Vel.y < ball.spinZ * ball.radius: alphaZ *= -1
-        if rightRail and ball.Vel.y > ball.spinZ * ball.radius: alphaZ *= -1
         
+        if leftRail and ball.Vel.y - ball.spinZ * ball.radius > 0 : ffy *= -1
+        if rightRail and ball.Vel.y + ball.spinZ * ball.radius > 0 : ffy *= -1
+        if leftRail and ball.Vel.y < 0 : alphaZ *= -1
+        if rightRail and ball.Vel.y > 0 : alphaZ *= -1
         
         ball.spinZ += alphaZ * timeStep
         accY = ffy/ball.mass
@@ -56,14 +60,15 @@ def Carom(ball, table, timeStep):
         ffx = normalF * table.feltFrictionCo
         alphaZ = spin.SolveAlpha(ball.mass, ball.radius, ball.momentOfInertia, table.feltFrictionCo, normalF)
         if spin.DidBallGrip(ball.Vel.x, alphaZ, timeStep, ball.spinZ, ball.radius):
-            ball.SpinZ = ball.Vel.x / ball.radius
             if bottomRail: ball.SpinZ *= -1
+            ball.Vel.x = ball.spinZ * ball.radius
+            print(ball.spinZ, ball.Vel.x)
             return
         
-        if topRail and ball.Vel.x > ball.spinZ * ball.radius: ffx *= -1
-        if bottomRail and ball.Vel.x < ball.spinZ * ball.radius: ffx *= -1
-        if topRail and ball.Vel.x < ball.spinZ * ball.radius: alphaZ *= -1
-        if bottomRail and ball.Vel.x > ball.spinZ * ball.radius: alphaZ *= -1
+        if topRail and ball.Vel.x - (ball.spinZ * ball.radius) < 0: ffx *= -1
+        if topRail and ball.Vel.x < 0: alphaZ *= -1
+        if bottomRail and ball.Vel.x + (ball.spinZ * ball.radius) < 0: ffx *= -1
+        if bottomRail and ball.Vel.x  > 0: alphaZ *= -1
         
         ball.spinZ += alphaZ * timeStep
         accX = ffx/ball.mass
@@ -73,7 +78,7 @@ if __name__ == "__main__":
     
     table = tableballdefs.Table(9, 0.000025, 0.3)
     ball = tableballdefs.Ball(0,0,table.length*0.75,table.width*0.75,0,0,0)
-    shot = tableballdefs.Shot(ball, 1, math.radians(15))
+    shot = tableballdefs.Shot(ball, 1.25, math.radians(15))
     ballList = []
     ballList.append(ball)
     
