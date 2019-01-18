@@ -30,7 +30,7 @@ class Simulation(object):
         self.shot.execute()
         ballsMoving = True
         timeStep = 0.005
-        stopVel = 0.05
+        stopVel = 0.005
         elapsedTime = 0
         
         while ballsMoving :
