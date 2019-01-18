@@ -46,7 +46,7 @@ class Simulation(object):
                     ball.zeroVel()
                     countStoppedBalls = countStoppedBalls + 1
                     
-                else:
+                elif not ball.pocketed:
                     ballsMoving = True
                     
                     #update the ball location

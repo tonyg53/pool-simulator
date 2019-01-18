@@ -121,12 +121,18 @@ class Ball(object):
         self.spinY = spinY
         self.spinZ = spinZ
         self.momentOfInertia = (2/5)*self.mass*self.radius*self.radius
+        self.pocketed = False
         
     def zeroVel(self):
         self.Vel = Vector(0,0)
         self.spinX = 0
         self.spinY = 0
         self.spinZ = 0
+        
+    def pocket(self):
+        self.pocketed = True
+        self.zeroVel()
+        
         
 class CueStick(object):
     
