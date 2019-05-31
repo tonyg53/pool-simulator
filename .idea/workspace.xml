@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1aee7dd7-b038-49e5-bafb-8aa0318d9109" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/msd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/collision.py" beforeDir="false" afterPath="$PROJECT_DIR$/collision.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cushion2.py" beforeDir="false" afterPath="$PROJECT_DIR$/cushion2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cushion3.py" beforeDir="false" afterPath="$PROJECT_DIR$/cushion3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tableballdefs.py" beforeDir="false" afterPath="$PROJECT_DIR$/tableballdefs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msd.py" beforeDir="false" afterPath="$PROJECT_DIR$/msd.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -97,7 +91,7 @@
             <entry file="file://$PROJECT_DIR$/msd.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="476">
-                  <caret line="28" column="45" selection-start-line="28" selection-start-column="45" selection-end-line="28" selection-end-column="45" />
+                  <caret line="28" column="46" selection-start-line="28" selection-start-column="46" selection-end-line="28" selection-end-column="46" />
                 </state>
               </provider>
             </entry>
@@ -152,6 +146,7 @@
     <panes />
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
@@ -335,7 +330,7 @@
     <entry file="file://$PROJECT_DIR$/msd.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
-          <caret line="28" column="45" selection-start-line="28" selection-start-column="45" selection-end-line="28" selection-end-column="45" />
+          <caret line="28" column="46" selection-start-line="28" selection-start-column="46" selection-end-line="28" selection-end-column="46" />
         </state>
       </provider>
     </entry>

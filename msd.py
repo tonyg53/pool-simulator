@@ -26,5 +26,5 @@ def rail_bounce(mass, init_vel, spring_coef, damper_coef):
 
 
 if __name__ == "__main__":
-    exit_vel = rail_bounce(0.165, -2, 100, .25)
+    exit_vel = rail_bounce(0.165, 2, 7500, 2.5)
     print(exit_vel)
