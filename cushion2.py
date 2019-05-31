@@ -37,7 +37,7 @@ def Carom(ball, table, timeStep):
             if ball.Vel.y > 0: ffy *= -1
             if (rightRail and ball.Vel.y > 0) or (leftRail and ball.Vel.y < 0): ball.spinZ *= -1
             accY = ffy/ball.mass
-            ball.Vel.y += 
+            ball.Vel.y += accY * timeStep
             print(ball.spinZ)
             return
         

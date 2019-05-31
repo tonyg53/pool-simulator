@@ -13,7 +13,7 @@ import random
 
 class Setup(object):
     
-    def __init__(self, numballs = 7, ballList = [], table = tableballdefs.Table()):
+    def __init__(self, numballs=7, table=tableballdefs.Table()):
         self.numballs = numballs
         self.table = table
         self.ballList = Rack(numballs, table)
@@ -59,7 +59,8 @@ def Rack(numBalls, table):
         ballList[3].Loc.y = ballList[1].Loc.y - random.random()/100 - math.sin(math.radians(60))*ballList[1].radius
         
     return ballList
-    
+
+
 if __name__ == "__main__":
     setup = Setup()
     setup.SetupSim()

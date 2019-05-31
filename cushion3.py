@@ -27,6 +27,7 @@ def Carom(ball, table, timeStep):
     #this is an attempt to fix the carom algorithm, seems to work, should test it locally
     #there is a problem with the physics in that the carom may take longer than one timeStep, 
     #a calc needs to be added to account for the time spent in contact with the rail.
+    #I think a mass spring damper type system needs to be implemented.
     if rightRail:
         prevXvel = ball.Vel.x
         ball.Vel.x *= -1 * table.cushionBounce

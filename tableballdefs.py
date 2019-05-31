@@ -45,59 +45,59 @@ class Table(object):
                 
         pocketLocationFactor = self.pocketRadius * math.sin(math.radians(45))
         self.pocketList = []
-        p = Pocket(self.pocketRadius,
-                   self.cornerPocketAngle, 
-                   self.cornerRadius, 
-                   self.cushionThickness, 
-                   pocketLocationFactor, 
-                   pocketLocationFactor)
+        p1 = Pocket(self.pocketRadius,
+                    self.cornerPocketAngle,
+                    self.cornerRadius,
+                    self.cushionThickness,
+                    pocketLocationFactor,
+                    pocketLocationFactor)
         
-        self.pocketList.append(p)
+        self.pocketList.append(p1)
         
-        p = Pocket(self.pocketRadius,
-                   self.cornerPocketAngle, 
-                   self.cornerRadius, 
-                   self.cushionThickness, 
-                   pocketLocationFactor, 
-                   self.width - pocketLocationFactor)
+        p2 = Pocket(self.pocketRadius,
+                    self.cornerPocketAngle,
+                    self.cornerRadius,
+                    self.cushionThickness,
+                    pocketLocationFactor,
+                    self.width - pocketLocationFactor)
         
-        self.pocketList.append(p)
+        self.pocketList.append(p2)
         
-        p = Pocket(self.pocketRadius,
-                   self.cornerPocketAngle, 
-                   self.cornerRadius, 
-                   self.cushionThickness, 
-                   self.length - pocketLocationFactor, 
-                   self.width - pocketLocationFactor)
+        p3 = Pocket(self.pocketRadius,
+                    self.cornerPocketAngle,
+                    self.cornerRadius,
+                    self.cushionThickness,
+                    self.length - pocketLocationFactor,
+                    self.width - pocketLocationFactor)
         
-        self.pocketList.append(p)
+        self.pocketList.append(p3)
         
-        p = Pocket(self.pocketRadius,
-                   self.cornerPocketAngle, 
-                   self.cornerRadius, 
-                   self.cushionThickness, 
-                   self.length - pocketLocationFactor, 
-                   pocketLocationFactor)
+        p4 = Pocket(self.pocketRadius,
+                    self.cornerPocketAngle,
+                    self.cornerRadius,
+                    self.cushionThickness,
+                    self.length - pocketLocationFactor,
+                    pocketLocationFactor)
         
-        self.pocketList.append(p)
+        self.pocketList.append(p4)
         
-        p = Pocket(self.pocketRadius, 
-                                self.sidePocketAngle, 
-                                self.cornerRadius, 
-                                self.cushionThickness,
-                                self.length / 2,
-                                0)
+        p5 = Pocket(self.pocketRadius,
+                    self.sidePocketAngle,
+                    self.cornerRadius,
+                    self.cushionThickness,
+                    self.length / 2,
+                    0)
         
-        self.pocketList.append(p)
+        self.pocketList.append(p5)
         
-        p = Pocket(self.pocketRadius, 
-                                self.sidePocketAngle, 
-                                self.cornerRadius, 
-                                self.cushionThickness,
-                                self.length / 2,
-                                self.width)
+        p6 = Pocket(self.pocketRadius,
+                    self.sidePocketAngle,
+                    self.cornerRadius,
+                    self.cushionThickness,
+                    self.length / 2,
+                    self.width)
         
-        self.pocketList.append(p)
+        self.pocketList.append(p6)
         
 class Pocket(object):
     

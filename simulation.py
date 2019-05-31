@@ -38,30 +38,25 @@ class Simulation(object):
             for k, ball in enumerate(self.ballList): 
                 
                 if ball.Vel.getLength() <= stopVel:
-#                    alpha = spin.SolveAlpha(ball.mass, ball.radius, ball.momentOfInertia, self.table.feltFrictionCo)
-#                    if spin.DidBallGrip(ball.Vel.x, alpha, timeStep, ball.spinY, ball.radius):
-#                        print('ball griped')
-#                    else: print('ball slipped')
-                        
                     ball.zeroVel()
-                    countStoppedBalls = countStoppedBalls + 1
+                    countStoppedBalls += 1
                     
                 elif not ball.pocketed:
                     ballsMoving = True
                     
-                    #update the ball location
+                    """update the ball location"""
                     ball.Loc.x += (ball.Vel.x * timeStep)
                     ball.Loc.y += (ball.Vel.y * timeStep)
                     self.plot.plotPoint(k, ball.Loc.x, ball.Loc.y)
                     
-                    #check to see if the ball has hit a wall, if so solve the new velocity
+                    """check to see if the ball has hit a wall, if so solve the new velocity"""
                     cushion2.Carom(ball, self.table, timeStep)
                     
-                    #apply friction
+                    """apply friction"""
                     frictionForceY = spin.SpinX(ball, self.table, timeStep)
                     frictionForceX = spin.SpinY(ball, self.table, timeStep)
                     
-                    #calculate the acceleration based on the table and ball conditions
+                    """calculate the acceleration based on the table and ball conditions"""
                     acc = -(2*9.8*self.table.feltThickness)/(3*ball.radius*ball.radius)
                     
                     alpha = math.atan2(ball.Vel.y,ball.Vel.x)
@@ -81,4 +76,3 @@ class Simulation(object):
         
         self.plot.showPlot()
         return self.ballList
-            
