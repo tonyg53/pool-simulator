@@ -17,15 +17,16 @@ class Vector(object):
 
 class Table(object):
     
-    def __init__(self, 
-                 length = 9, 
-                 feltThickness = 0.000025, 
-                 feltFrictionCo = 0.3, 
-                 cushionBounce = 0.9, 
-                 cushionThickness = 0.051, 
-                 pocketRadius = 0.0536, 
-                 cornerRadius = 0.005, 
-                 cornerPocketAngle = 45, 
+    def __init__(self,
+                 length = 9,
+                 feltThickness = 0.000025,
+                 feltFrictionCo = 0.1,
+                 cushion_spring_coef = 17500,
+                 cushion_damper_coef = 2.5,
+                 cushionThickness = 0.051,
+                 pocketRadius = 0.0536,
+                 cornerRadius = 0.005,
+                 cornerPocketAngle = 45,
                  sidePocketAngle = 85):
         #convert feet to meters
         self.length = length * 0.3048
@@ -33,7 +34,8 @@ class Table(object):
         self.width = (length / 2) * 0.3048
         self.feltThickness = feltThickness
         self.feltFrictionCo = feltFrictionCo
-        self.cushionBounce = cushionBounce
+        self.cushion_spring_coef = cushion_spring_coef
+        self.cushion_damper_coef = cushion_damper_coef
         self.cushionThickness = cushionThickness
         self.pocketRadius = pocketRadius
         self.cornerRadius = cornerRadius
@@ -152,16 +154,16 @@ class Shot(object):
         self.cueStick = cueStick
         
     def didMisscue(self):
-        strikeMomentArm = math.sqrt(math.pow(self.strikePtX,2)+math.pow(self.strikePtY,2))
+        strikeMomentArm = math.sqrt(math.pow(self.strikePtX, 2)+math.pow(self.strikePtY, 2))
         
-        if strikeMomentArm > self.cueBall.radius/2 : 
+        if strikeMomentArm > self.cueBall.radius/2:
             print("misscue")
             return True
         
         return False
         
     def execute(self):
-        if self.cueBall.Vel.getLength() != 0 : raise "wait for balls to stop"
+        if self.cueBall.Vel.getLength() != 0 : raise Exception("wait for balls to stop")
 
         #assume stick is accelerated for 0.5 sec
         stickForce = self.cueStick.mass * self.cueStickVelocity / 0.5

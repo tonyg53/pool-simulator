@@ -8,7 +8,7 @@ import tableballdefs
 import collision
 import plotballs
 import spin
-import cushion2
+import cushion3
 
 import math
 import itertools
@@ -29,7 +29,7 @@ class Simulation(object):
             
         self.shot.execute()
         ballsMoving = True
-        timeStep = 0.005
+        timeStep = 0.001
         stopVel = 0.005
         elapsedTime = 0
         
@@ -50,7 +50,7 @@ class Simulation(object):
                     self.plot.plotPoint(k, ball.Loc.x, ball.Loc.y)
                     
                     """check to see if the ball has hit a wall, if so solve the new velocity"""
-                    cushion2.Carom(ball, self.table, timeStep)
+                    cushion3.Carom(ball, self.table, timeStep)
                     
                     """apply friction"""
                     frictionForceY = spin.SpinX(ball, self.table, timeStep)
@@ -59,10 +59,10 @@ class Simulation(object):
                     """calculate the acceleration based on the table and ball conditions"""
                     acc = -(2*9.8*self.table.feltThickness)/(3*ball.radius*ball.radius)
                     
-                    alpha = math.atan2(ball.Vel.y,ball.Vel.x)
+                    direction = math.atan2(ball.Vel.y,ball.Vel.x)
                     
-                    xAcc = math.cos(alpha) * acc + frictionForceX/ball.mass
-                    yAcc = math.sin(alpha) * acc + frictionForceY/ball.mass
+                    xAcc = math.cos(direction) * acc + frictionForceX/ball.mass
+                    yAcc = math.sin(direction) * acc + frictionForceY/ball.mass
                     
                     ball.Vel.x = ball.Vel.x + (xAcc * timeStep)
                     ball.Vel.y = ball.Vel.y + (yAcc * timeStep)

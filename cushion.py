@@ -32,7 +32,7 @@ def Carom(ball, table, timeStep):
     #I should be calculating the velocity of the outside of the ball added to the linear velocity of the ball
     if rightRail or leftRail:
         prevXvel = ball.Vel.x
-        ball.Vel.x *= -1 * table.cushionBounce
+        ball.Vel.x *= -1 * table.cushion_damper_coef
         ball.Loc.x = table.length - table.cushionThickness - ball.radius if rightRail else table.cushionThickness + ball.radius
         accX = prevXvel - ball.Vel.x / timeStep
         normalF = ball.mass * accX
@@ -48,7 +48,7 @@ def Carom(ball, table, timeStep):
         
     elif topRail or bottomRail:
         prevYvel = ball.Vel.y
-        ball.Vel.y *= -1 * table.cushionBounce
+        ball.Vel.y *= -1 * table.cushion_damper_coef
         ball.Loc.y = table.width - table.cushionThickness - ball.radius if topRail else table.cushionThickness + ball.radius
         accY = prevYvel - ball.Vel.y / timeStep
         normalF = ball.mass * accY
