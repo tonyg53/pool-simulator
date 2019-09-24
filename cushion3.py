@@ -46,20 +46,23 @@ def Carom(ball, table, timeStep):
     # a calc needs to be added to account for the time spent in contact with the rail.
     # I think a mass spring damper type system needs to be implemented.
     if rightRail or leftRail:
-        x = ball.Loc.x + ball.radius + table.cushionThickness - table.length
-        acc_x = ((table.cushion_spring_coef * x) + (table.cushion_damper_coef * ball.Vel.x)) / ball.mass
-        if rightRail: acc_x *= -1
+        x = ball.Loc.x + ball.radius + table.cushionThickness - table.length if \
+            rightRail else ball.Loc.x - ball.radius - table.cushionThickness
+        acc_x = -((table.cushion_spring_coef * x) + (table.cushion_damper_coef * ball.Vel.x)) / ball.mass
         ball.Vel.x += acc_x * timeStep
         ball.Loc.x += ball.Vel.x * timeStep
 
         normal = ball.mass * acc_x
-        ffy_dir = ball.Vel.y + ball.spinZ * ball.radius < 0
-        friction_force_y = spin.SolveFF(table.feltFrictionCo, normal, ffy_dir)
+        ffy_ = ball.Vel.y + ball.spinZ * ball.radius > 0 if rightRail else ball.Vel.y - ball.spinZ * ball.radius > 0
+        friction_force_y = spin.SolveFF(table.feltFrictionCo, normal)
         alpha_z = spin.SolveAlpha(ball.radius, ball.momentOfInertia, friction_force_y)
 
-        ball.spinZ += alpha_z * timeStep
-        acc_y = friction_force_y / ball.mass
-        ball.Vel.y += acc_y * timeStep
+        if spin.DidBallGrip(ball.Vel.y, alpha_z, timeStep, ball.spinZ, ball.radius):
+            ball.spinZ = ball.Vel.y / ball.radius
+        else:
+            ball.spinZ += alpha_z * timeStep
+            acc_y = friction_force_y / ball.mass
+            ball.Vel.y += acc_y * timeStep
 
     if topRail or bottomRail:
         y = ball.Loc.y + ball.radius + table.cushionThickness - table.width
@@ -73,15 +76,11 @@ def Carom(ball, table, timeStep):
         # alpha_z = spin.SolveAlpha(ball.mass, ball.radius, ball.momentOfInertia, table.feltFrictionCo, normal)
 
 
-
-
-
-
 if __name__ == "__main__":
     
     table = tableballdefs.Table(9, 0.000025, 0.08)
-    ball = tableballdefs.Ball(0, 0, table.length*0.75, table.width*0.75, 0, 0, 0)
-    shot = tableballdefs.Shot(ball, 1.0, math.radians(15), -ball.radius*0.4)
+    ball = tableballdefs.Ball(0, 0, table.length*0.25, table.width*0.75, 0, 0, 0)
+    shot = tableballdefs.Shot(ball, 1.5, math.radians(180), ball.radius / -2, 0)
     ballList = [ball]
 
     sim = simulation.Simulation(1, ballList, shot, table)

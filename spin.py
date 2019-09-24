@@ -9,12 +9,14 @@ import tableballdefs
 
 
 def Test():
-    ball = tableballdefs.Ball(2.75, 0, 0, 0,)
+    ball = tableballdefs.Ball(2, -2, 0, 0, 30, -30)
     table = tableballdefs.Table()
     timeStep = 0.001
 
     frictionForceY = SpinX(ball, table, timeStep)
     frictionForceX = SpinY(ball, table, timeStep)
+
+    time = timeStep
 
     while frictionForceY != 0 or frictionForceX != 0:
 
@@ -28,7 +30,10 @@ def Test():
         frictionForceY = SpinX(ball, table, timeStep)
         frictionForceX = SpinY(ball, table, timeStep)
 
-        print("Vel x: ", ball.Vel.x, "Vel y: ", ball.spinY * ball.radius, "Spin x: ", ball.spinX * ball.radius, "Spin y: ", ball.spinY * ball.radius)
+        print("Vel x: ", ball.Vel.x, "Vel y: ", ball.Vel.y,
+              "Spin x: ", ball.spinX * ball.radius, "Spin y: ", ball.spinY * ball.radius,
+              "Elapsed time: ", time)
+        time += timeStep
 
 
 # returns the friction force due to the ball sliding,
@@ -36,7 +41,7 @@ def Test():
 def SpinX(ball, table, timeStep):
     normal = 9.8 * ball.mass
     ff_dir = ball.Vel.y + (ball.spinX * ball.radius) < 0
-    ff = SolveFF(table.feltFrictionCo, normal, ff_dir)
+    ff = SolveFF(table.feltFrictionCo, normal, ff_dir) if ball.Vel.y != 0 else 0
     alpha = SolveAlpha(ball.radius, ball.momentOfInertia, ff)
     
     if DidBallGrip(ball.Vel.y, alpha, timeStep, ball.spinX, ball.radius):
@@ -52,8 +57,8 @@ def SpinX(ball, table, timeStep):
 def SpinY(ball, table, timeStep):
     normal = 9.8 * ball.mass
     ff_dir = ball.Vel.x - (ball.spinY * ball.radius) < 0
-    ff = SolveFF(table.feltFrictionCo, normal, ff_dir)
-    alpha = SolveAlpha(ball.radius, ball.momentOfInertia, ff)
+    ff = SolveFF(table.feltFrictionCo, normal, ff_dir) if ball.Vel.x != 0 else 0
+    alpha = -SolveAlpha(ball.radius, ball.momentOfInertia, ff)
 
     if DidBallGrip(ball.Vel.x, alpha, timeStep, ball.spinY, ball.radius):
         ball.spinY = ball.Vel.x / ball.radius
@@ -68,12 +73,12 @@ def SolveAlpha(radius, moi, ff):
     return torqueFF / moi
 
 
-def SolveFF(frictionCo, normalForce, positive = True):
-    return normalForce * frictionCo if positive else -normalForce * frictionCo
+def SolveFF(frictionCo, normalForce):
+    return normalForce * frictionCo
 
 
 def DidBallGrip(vel, alpha, timeStep, omega, radius):
-    if abs(abs(omega) - abs(alpha * timeStep)) * radius <= abs(vel):
+    if round(abs(abs(omega) - abs(alpha * timeStep)) * radius,2) == round(abs(vel), 2):
         return True
     return False
 
