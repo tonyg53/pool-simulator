@@ -5,48 +5,25 @@ Created on Fri Aug  3 15:47:40 2018
 @author: tony.gold
 """
 
-import tableballdefs
-
-
-def Test():
-    ball = tableballdefs.Ball(2, -2, 0, 0, 30, -30)
-    table = tableballdefs.Table()
-    timeStep = 0.001
-
-    frictionForceY = SpinX(ball, table, timeStep)
-    frictionForceX = SpinY(ball, table, timeStep)
-
-    time = timeStep
-
-    while frictionForceY != 0 or frictionForceX != 0:
-
-
-        acc_x_ff = frictionForceX / ball.mass
-        acc_y_ff = frictionForceY / ball.mass
-
-        ball.Vel.x += acc_x_ff * timeStep
-        ball.Vel.y += acc_y_ff * timeStep
-
-        frictionForceY = SpinX(ball, table, timeStep)
-        frictionForceX = SpinY(ball, table, timeStep)
-
-        print("Vel x: ", ball.Vel.x, "Vel y: ", ball.Vel.y,
-              "Spin x: ", ball.spinX * ball.radius, "Spin y: ", ball.spinY * ball.radius,
-              "Elapsed time: ", time)
-        time += timeStep
+from enum import Enum
 
 
 # returns the friction force due to the ball sliding,
 # returns 0 if the ball is spinning at the same velocity as it's moving
-def SpinX(ball, table, timeStep):
+def SpinX(ball, frictionCoef, timeStep):
     normal = 9.8 * ball.mass
-    ff_dir = ball.Vel.y + (ball.spinX * ball.radius) < 0
-    ff = SolveFF(table.feltFrictionCo, normal, ff_dir) if ball.Vel.y != 0 else 0
+    ff = SolveFF(frictionCoef, normal)
     alpha = SolveAlpha(ball.radius, ball.momentOfInertia, ff)
     
     if DidBallGrip(ball.Vel.y, alpha, timeStep, ball.spinX, ball.radius):
-        ball.spinX = -1 * ball.Vel.y / ball.radius
+        ball.spinX = -ball.Vel.y / ball.radius
         return 0
+
+    edge_vel = ball.Vel.y + (ball.spinX * ball.radius)
+
+    if edge_vel > 0:
+        ff *= -1
+        alpha *= -1
 
     ball.spinX += alpha * timeStep
     return ff
@@ -54,17 +31,43 @@ def SpinX(ball, table, timeStep):
 
 # returns the friction force due to the ball sliding,
 # returns 0 if the ball is spinning at the same velocity as it's moving
-def SpinY(ball, table, timeStep):
+def SpinY(ball, frictionCoef, timeStep):
     normal = 9.8 * ball.mass
-    ff_dir = ball.Vel.x - (ball.spinY * ball.radius) < 0
-    ff = SolveFF(table.feltFrictionCo, normal, ff_dir) if ball.Vel.x != 0 else 0
-    alpha = -SolveAlpha(ball.radius, ball.momentOfInertia, ff)
+    ff = SolveFF(frictionCoef, normal)
+    alpha = SolveAlpha(ball.radius, ball.momentOfInertia, ff)
 
     if DidBallGrip(ball.Vel.x, alpha, timeStep, ball.spinY, ball.radius):
         ball.spinY = ball.Vel.x / ball.radius
         return 0
 
+    edge_vel = ball.Vel.x - (ball.spinY * ball.radius)
+
+    if edge_vel > 0:
+        ff *= -1
+    elif edge_vel < 0:
+        alpha *= -1
+
     ball.spinY += alpha * timeStep
+    return ff
+
+def SpinZ(ball, frictionCoef, normal, timeStep):
+    """
+    Calculates the z spin and resultant friction force of the ball assuming that the ball is hitting the Left rail
+    This allows for a positive parrallel velocity imparting a positive z spin on the ball.
+    | <-- o
+    sign convention for other rails should be converted on input parameters.
+    """
+    ff = SolveFF(frictionCoef, normal)
+    alpha = -SolveAlpha(ball.radius, ball.momentOfInertia, ff)
+
+    if DidBallGrip(ball.Vel.y, alpha, timeStep, ball.spinZ, ball.radius):
+        ball.spinZ = ball.Vel.y / ball.radius
+        return 0
+    ball.spinZ += alpha * timeStep
+    edge_v = ball.Vel.y - (ball.spinZ * ball.radius)
+    if edge_v > 0:
+        ff *= -1
+
     return ff
 
     
@@ -78,10 +81,12 @@ def SolveFF(frictionCo, normalForce):
 
 
 def DidBallGrip(vel, alpha, timeStep, omega, radius):
-    if round(abs(abs(omega) - abs(alpha * timeStep)) * radius,2) == round(abs(vel), 2):
+    if round(abs(abs(omega) - abs(alpha * timeStep)) * radius,1) == round(abs(vel), 1):
         return True
     return False
 
-
-if __name__ == "__main__":
-    Test()
+class Rail(Enum):
+    RIGHT = 1
+    LEFT = 2
+    TOP = 3
+    BOTTOM = 4

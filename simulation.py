@@ -32,6 +32,7 @@ class Simulation(object):
         timeStep = 0.001
         stopVel = 0.005
         elapsedTime = 0
+        collision_count = 0
         
         while ballsMoving :
             countStoppedBalls = 0
@@ -47,14 +48,15 @@ class Simulation(object):
                     """update the ball location"""
                     ball.Loc.x += (ball.Vel.x * timeStep)
                     ball.Loc.y += (ball.Vel.y * timeStep)
-                    self.plot.plotPoint(k, ball.Loc.x, ball.Loc.y)
+                    if (round(elapsedTime, 3)*1000) % 50 == 0:
+                        self.plot.plotPoint(k, ball.Loc.x, ball.Loc.y)
                     
                     """check to see if the ball has hit a wall, if so solve the new velocity"""
                     cushion3.Carom(ball, self.table, timeStep)
                     
                     """apply friction"""
-                    frictionForceY = spin.SpinX(ball, self.table, timeStep)
-                    frictionForceX = spin.SpinY(ball, self.table, timeStep)
+                    frictionForceY = spin.SpinX(ball, self.table.feltFrictionCo, timeStep)
+                    frictionForceX = spin.SpinY(ball, self.table.feltFrictionCo, timeStep)
                     
                     """calculate the acceleration based on the table and ball conditions"""
                     acc = -(2*9.8*self.table.feltThickness)/(3*ball.radius*ball.radius)
@@ -67,8 +69,9 @@ class Simulation(object):
                     ball.Vel.x = ball.Vel.x + (xAcc * timeStep)
                     ball.Vel.y = ball.Vel.y + (yAcc * timeStep)
                      
-            for ball1, ball2 in itertools.combinations(self.ballList, 2):
-                 if collision.happened(ball1, ball2) : 
+            for k, [ball1, ball2] in enumerate(itertools.combinations(self.ballList, 2)):
+                 if collision.happened(ball1, ball2) :
+                     print(k)
                      collision.run(ball1, ball2)
                 
             if countStoppedBalls == self.numballs : ballsMoving = False
